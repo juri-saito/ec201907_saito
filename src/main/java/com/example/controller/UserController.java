@@ -39,6 +39,12 @@ public class UserController {
 		return "register_user.html";
 	}
 	
+	/**
+	 * ユーザ情報を登録する.
+	 * @param form　ユーザ情報登録に用いるフォーム
+	 * @param result　エラーメッセージを格納するオブジェクト
+	 * @return　ログイン画面　エラーがある場合はユーザ情報登録画面へ遷移
+	 */
 	@RequestMapping("/insert")
 	public String insert(@Validated InsertUserForm form, BindingResult result) {
 		
@@ -46,7 +52,6 @@ public class UserController {
 		//パスワード確認
 		if(!form.getPassword().equals(form.getConfirmationPassword())) {
 			result.rejectValue("password", "", "パスワードが一致しません");
-			result.rejectValue("confirmationPassword", "", "");
 		}
 		
 		//メールアドレスの確認
@@ -66,6 +71,15 @@ public class UserController {
 		//ユーザ登録処理
 		userService.insert(user);
 		
+		return "/toLogin";
+	}
+	
+	/**
+	 * ログインページを表示
+	 * @return　ログインページ
+	 */
+	@RequestMapping("/toLogin")
+	public String toLogin() {
 		return "login.html";
 	}
 }
