@@ -13,8 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder; //pom.xml�
  * @author juri.saito
  *
  */
-@Configuration
-@EnableWebSecurity
+@Configuration   //自分の設定してログインページを出力するのに必要
+@EnableWebSecurity   //自分の設定してログインページを出力するのに必要
 public class SecurityConfig  extends WebSecurityConfigurerAdapter{
 	
 	 @Override
