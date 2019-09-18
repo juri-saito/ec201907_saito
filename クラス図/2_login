@@ -121,8 +121,8 @@
                   <constraint>
                     <height>-1</height>
                     <width>-1</width>
-                    <x>745</x>
-                    <y>201</y>
+                    <x>675</x>
+                    <y>85</y>
                   </constraint>
                   <sourceConnections>
                     <net.java.amateras.uml.classdiagram.model.DependencyModel>
@@ -211,8 +211,8 @@
                   <constraint>
                     <height>-1</height>
                     <width>-1</width>
-                    <x>512</x>
-                    <y>322</y>
+                    <x>442</x>
+                    <y>206</y>
                   </constraint>
                   <sourceConnections>
                     <net.java.amateras.uml.classdiagram.model.DependencyModel>
@@ -252,8 +252,8 @@
                         <constraint>
                           <height>-1</height>
                           <width>-1</width>
-                          <x>758</x>
-                          <y>484</y>
+                          <x>688</x>
+                          <y>368</y>
                         </constraint>
                         <sourceConnections/>
                         <targetConnections>
@@ -524,8 +524,8 @@
                   <constraint>
                     <height>-1</height>
                     <width>-1</width>
-                    <x>357</x>
-                    <y>441</y>
+                    <x>287</x>
+                    <y>325</y>
                   </constraint>
                   <sourceConnections/>
                   <targetConnections/>
@@ -597,8 +597,8 @@
                   <constraint>
                     <height>-1</height>
                     <width>-1</width>
-                    <x>357</x>
-                    <y>507</y>
+                    <x>287</x>
+                    <y>391</y>
                   </constraint>
                   <sourceConnections/>
                   <targetConnections/>
@@ -662,8 +662,8 @@
                   <constraint>
                     <height>109</height>
                     <width>169</width>
-                    <x>266</x>
-                    <y>146</y>
+                    <x>196</x>
+                    <y>30</y>
                   </constraint>
                   <sourceConnections/>
                   <targetConnections/>
@@ -874,8 +874,8 @@
       <constraint>
         <height>-1</height>
         <width>-1</width>
-        <x>1041</x>
-        <y>328</y>
+        <x>971</x>
+        <y>212</y>
       </constraint>
       <sourceConnections>
         <net.java.amateras.uml.classdiagram.model.DependencyModel reference="../../parent/children/net.java.amateras.uml.classdiagram.model.ClassModel/parent/children/net.java.amateras.uml.classdiagram.model.ClassModel[3]/sourceConnections/net.java.amateras.uml.classdiagram.model.DependencyModel/target/targetConnections/net.java.amateras.uml.classdiagram.model.DependencyModel[2]"/>
@@ -897,7 +897,7 @@
             </java.beans.PropertyChangeSupport>
           </listeners>
           <visibility class="net.java.amateras.uml.classdiagram.model.Visibility$1" reference="../../../parent/children/net.java.amateras.uml.classdiagram.model.ClassModel/parent/children/net.java.amateras.uml.classdiagram.model.ClassModel[3]/children/net.java.amateras.uml.classdiagram.model.OperationModel/visibility"/>
-          <name>findByMail</name>
+          <name>findByEMail</name>
           <type>User</type>
           <params>
             <net.java.amateras.uml.classdiagram.model.Argument>

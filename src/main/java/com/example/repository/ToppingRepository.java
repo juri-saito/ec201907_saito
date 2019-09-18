@@ -4,9 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Repository;
 
+import com.example.domain.OrderTopping;
 import com.example.domain.Topping;
 
 /**
@@ -31,7 +34,7 @@ public class ToppingRepository {
 	
 	/**
 	 * 全トッピング情報を取得
-	 * @return
+	 * @return トッピング情報一覧リスト
 	 */
 	public List<Topping> findAll(){
 		String sql = "SELECT id,name,price_m,price_l FROM toppings ORDER BY name;";
