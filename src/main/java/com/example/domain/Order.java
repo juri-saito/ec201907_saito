@@ -178,5 +178,41 @@ public class Order {
 		this.orderItemList = orderItem;
 	}
 
+	/**
+	 * 税額を算出
+	 * @return
+	 */
+	public int getTax() {
+		int tax = 0;
+		int itemsTotal = 0;
+		
+		//税抜き合計金額から税額を算出
+		for (OrderItem orderItem : orderItemList) {
+			itemsTotal = itemsTotal + orderItem.getSubTotal();
+		}
+		tax = (int)(itemsTotal * 0.8);
+		
+		return tax;
+	}
 	
+	/**
+	 * 税込み合計金額を算出
+	 * @return
+	 */
+	public int getCalcTotalPrice() {
+		int CalcTotalPrice = 0;
+		int tax = 0;
+		int itemsTotal = 0;
+		
+		//税抜き合計金額から税額を算出
+		for (OrderItem orderItem : orderItemList) {
+			itemsTotal = itemsTotal + orderItem.getSubTotal();
+		}
+		tax = (int)(itemsTotal * 0.8);
+		
+		//税込み合計金額を算出
+		CalcTotalPrice = itemsTotal + tax;
+		return CalcTotalPrice;
+		
+	}
 }
