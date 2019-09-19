@@ -6,14 +6,13 @@ import java.util.UUID;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.common.Common;
-import com.example.domain.LoginUser;
+import com.example.domain.Order;
 import com.example.form.ShoppingCartReceiveForm;
 import com.example.service.ShoppingCartService;
 
@@ -35,6 +34,10 @@ public class ShoppingCartController {
 	@Autowired
 	private Common common;
 	
+	
+	//////////////////////////////////////////////////////////
+	///ショッピングカートに注文商品と注文トッピングを追加/////
+	//////////////////////////////////////////////////////////
 	/**
 	 * ショッピングカートに注文商品と注文トッピングを追加する.
 	 * @param form 商品の注文情報
@@ -66,10 +69,24 @@ public class ShoppingCartController {
 			shoppingCartService.addItem(form);
 		
 		}else{
+			//③ログインしているときの処理
 			form.setUserId(common.GetUserId());
 			shoppingCartService.addItem(form);
 		}
 //		return "redirect:/cart/showOrders";
 		return "order_confirm.html";
 	}
+	
+	
+	//////////////////////////////////////////
+	///ショッピングカートの中身を表示する/////
+	//////////////////////////////////////////
+	@RequestMapping("/show")
+	public String showCart(Model model) {
+		//③ログイン中のユーザのショッピングカートを表示
+		Order order = shoppingCartService.showLoginUserCart(common.GetUserId());
+		model.addAttribute("order", order);
+		return "cart_list";
+	}
+	
 }

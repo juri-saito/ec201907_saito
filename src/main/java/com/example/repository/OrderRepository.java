@@ -48,7 +48,7 @@ public class OrderRepository {
 		List<OrderItem> orderItemList = null;
 		List<OrderTopping> orderToppingList = null;
 		
-		//注文ID退避用の変数
+		//注文ID退避用の変数(デフォルトの初期値0が意図せずorderIdNowと一致しないように-1を初期値として定義)
 		int orderIdBefore = -1;
 		//注文商品ID退避用の変数
 		int orderItemIdBefore = -1;
