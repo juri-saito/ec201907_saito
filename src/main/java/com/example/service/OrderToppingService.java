@@ -34,11 +34,10 @@ public class OrderToppingService {
 	public List<OrderTopping> findByOrderItemId(Integer orderItemId) {
 		//注文トッピングリストを取得
 				List<OrderTopping> orderToppingList = orderToppingRepository.findByOrderItemId(orderItemId);
-				
 				//注文トッピング情報1つ1つにトッピング情報を付与
 				for (OrderTopping orderTopping : orderToppingList) {
 				Topping topping = toppingRepository.findById(orderTopping.getToppingId());
-				orderTopping.setTopping(topping); //参照中のorderToppingに既にtopping情報を付与
+				orderTopping.setTopping(topping); //参照中のorderToppingにtopping情報を付与
 				}
 				return orderToppingList;
 	}

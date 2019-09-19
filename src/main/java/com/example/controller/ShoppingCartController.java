@@ -52,7 +52,7 @@ public class ShoppingCartController {
 		String compareUserId = String.valueOf(session.getAttribute("userId")); //userIdというセッションキーに対応する値をセッションから取得してString型に変換して代入
 		
 		if(principal == "anonymousUser" && (compareToken == null || compareToken.equals(""))) {
-			//①初めてトークンを作成するときの処理
+			//①未ログインでショッピングカートも無い（初めてトークンを作成する）ときの処理
 			String token = UUID.randomUUID().toString();
 			//セッションにトークンを退避
 			session.setAttribute("token", token);
@@ -64,7 +64,7 @@ public class ShoppingCartController {
 			shoppingCartService.addItem(form);
 		
 		}else if(compareToken != null && session.getAttribute("token") != null && principal == "anonymousUser" && compareToken.equals((String)session.getAttribute("token"))){
-			//②トークンが既に作成されているときの処理
+			//②未ログインでショッピングカートがある（トークンが既に作成されている）ときの処理
 			form.setUserId(Integer.parseInt(compareUserId));		
 			shoppingCartService.addItem(form);
 		
@@ -73,8 +73,7 @@ public class ShoppingCartController {
 			form.setUserId(common.GetUserId());
 			shoppingCartService.addItem(form);
 		}
-//		return "redirect:/cart/showOrders";
-		return "order_confirm.html";
+		return "redirect:/cart/show";
 	}
 	
 	
@@ -83,10 +82,34 @@ public class ShoppingCartController {
 	//////////////////////////////////////////
 	@RequestMapping("/show")
 	public String showCart(Model model) {
-		//③ログイン中のユーザのショッピングカートを表示
-		Order order = shoppingCartService.showLoginUserCart(common.GetUserId());
-		model.addAttribute("order", order);
-		return "cart_list";
+		//認証情報を取得
+				Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+				//比較用にトークンを退避
+				String compareToken = (String) session.getAttribute("token"); //tokenというセッションキーに対応する値をセッションから取得してString型に変換して代入
+				String compareUserId = String.valueOf(session.getAttribute("userId")); //userIdというセッションキーに対応する値をセッションから取得してString型に変換して代入
+				
+				if(principal == "anonymousUser" && (compareToken == null || compareToken.equals(""))) {
+					//①未ログインでショッピングカートも無い（初めてトークンを作成する）ときに空のショッピングカートを表示
+					String token = UUID.randomUUID().toString();
+					//セッションにトークンを退避
+					session.setAttribute("token", token);
+					//仮のユーザIDを作成
+					Random rand = new Random();
+					session.setAttribute("userId", rand.nextInt(899999999)+100000000); //100000000~999999998の範囲で乱数を生成（int型の最大値）してユーザIDとしてセッションにセット
+					//仮のユーザidで空のショッピングカートを作成し表示
+					Order order = shoppingCartService.showLoginUserCart(Integer.parseInt(String.valueOf(session.getAttribute("userId"))));
+					model.addAttribute("order", order);
+				
+				}else if(compareToken != null && session.getAttribute("token") != null && principal == "anonymousUser" && compareToken.equals((String)session.getAttribute("token"))){
+					//②未ログインでショッピングカートがある（トークンが既に作成されている）ときにショッピングカートを表示
+					Order order = shoppingCartService.showLoginUserCart(Integer.parseInt(compareUserId));
+					model.addAttribute("order", order);
+				
+				}else{
+					//③ログイン中のユーザのショッピングカートを表示
+					Order order = shoppingCartService.showLoginUserCart(common.GetUserId());
+					model.addAttribute("order", order);
+				}
+				return "cart_list";
 	}
-	
 }

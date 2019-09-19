@@ -43,6 +43,7 @@ public class OrderItemRepository {
 	 */
 	private static final RowMapper<OrderItem> ORDER_ITEM_ROW_MAPPER = (rs, i) -> {
 		OrderItem orderItem = new OrderItem();
+		orderItem.setId(rs.getInt("id"));
 		orderItem.setItemId(rs.getInt("item_id"));
 		orderItem.setOrderId(rs.getInt("order_id"));
 		orderItem.setQuantity(rs.getInt("quantity"));
@@ -67,15 +68,15 @@ public class OrderItemRepository {
 		return orderItem;
 	}
 
-		/**
-		 * 注文idから注文商品リストを取得.
-		 * @param id 注文ID
-		 * @return　注文商品リスト
-		 */
-		public List<OrderItem> findByOrderId(Integer orderId) {
-			String sql = "SELECT id,item_id,order_id,quantity,size FROM order_items WHERE order_id = :orderId;";
-			SqlParameterSource param = new MapSqlParameterSource().addValue("orderId", orderId);
-			List<OrderItem> orderItemList = template.query(sql, param, ORDER_ITEM_ROW_MAPPER);
-			return orderItemList;
-		}
+	/**
+	 * 注文idから注文商品リストを取得.
+	 * @param id 注文ID
+	 * @return　注文商品リスト
+	 */
+	public List<OrderItem> findByOrderId(Integer orderId) {
+		String sql = "SELECT id,item_id,order_id,quantity,size FROM order_items WHERE order_id = :orderId;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("orderId", orderId);
+		List<OrderItem> orderItemList = template.query(sql, param, ORDER_ITEM_ROW_MAPPER);
+		return orderItemList;
+	}
 }

@@ -49,7 +49,14 @@ public class ToppingRepository {
 	public Topping findById(Integer id){
 		String sql = "SELECT id,name,price_m,price_l FROM toppings WHERE id=:id;";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
-		Topping topping = template.queryForObject(sql, param, TOPPING_ROW_MAPPER);
+		List<Topping> toppingList = template.query(sql, param, TOPPING_ROW_MAPPER);
+		
+		Topping topping = new Topping();
+		
+		if(toppingList != null && toppingList.size() != 0) {
+			topping = toppingList.get(0);
+		}
+		
 		return topping;
 	}
 }

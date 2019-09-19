@@ -34,7 +34,6 @@ public class OrderItemService {
 	public List<OrderItem> findByOrderId(Integer orderId) {
 		//注文商品リストを取得
 		List<OrderItem> orderItemList = orderItemRepository.findByOrderId(orderId);
-		
 		//注文商品情報1つ1つに商品情報を付与
 		for (OrderItem orderItem : orderItemList) {
 			Item item = itemRepository.findById(orderItem.getItemId());

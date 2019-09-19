@@ -30,8 +30,8 @@ public class OrderToppingRepository {
 	private static final RowMapper<OrderTopping> ORDER_TOPPING_ROW_MAPPER = (rs, i) -> {
 		OrderTopping orderTopping = new OrderTopping();
 		orderTopping.setId(rs.getInt("id"));
+		orderTopping.setToppingId(rs.getInt("topping_id"));
 		orderTopping.setOrderItemId(rs.getInt("order_item_id"));
-		orderTopping.setId(rs.getInt("order_item_id"));
 		Topping topping =null;
 		orderTopping.setTopping(topping);
 		return orderTopping;
