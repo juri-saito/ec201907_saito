@@ -91,4 +91,33 @@ public class OrderItem {
 	public void setOrderToppingList(List<OrderTopping> orderToppingList) {
 		this.orderToppingList = orderToppingList;
 	}
+	
+	/**
+	 * 小計金額を算出
+	 * @return　小計金額
+	 */
+	public int getSubTotal() {
+		int subTotal = 0;
+		int curryPrice = 0;
+		int toppingSubTotal = 0;
+		
+		//サイズに応じた商品価格とトッピング小計を取得
+		if(size == 'M') {
+			curryPrice = item.getPriceM();
+			for (OrderTopping orderTopping : orderToppingList) {
+				toppingSubTotal = toppingSubTotal + orderTopping.getTopping().getPriceM();
+			}
+		}else if (size == 'L'){
+			curryPrice = item.getPriceL();
+			for (OrderTopping orderTopping : orderToppingList) {
+				toppingSubTotal = toppingSubTotal + orderTopping.getTopping().getPriceL();
+			}
+		}
+		
+		//小計を算出
+		subTotal = curryPrice + toppingSubTotal;
+		
+		return subTotal;
+	}
+	
 }
