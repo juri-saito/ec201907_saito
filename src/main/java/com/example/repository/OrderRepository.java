@@ -181,7 +181,7 @@ public class OrderRepository {
 	}
 	
 	/**
-	 * 新しい注文情報をDBに挿入する
+	 * ショッピングカートに追加する
 	 * @param order　注文情報
 	 * @return　注文情報（主キー付き）
 	 */
@@ -190,6 +190,16 @@ public class OrderRepository {
 		Number key = insert.executeAndReturnKey(param);
 		order.setId(key.intValue());
 		return order;
+	}
+	
+	/**
+	 * 注文をする（注文情報を更新する）
+	 * @param order　注文情報
+	 */
+	public void order(Order order) {
+		String sql = "UPDATE orders SET status = :status, total_price = :totalPrice, order_date = :orderDate, destination_name = :destinationName, destination_email = :destinationEmail, destination_zipcode = :destinationZipcode, destination_address = :destinationAddress, destination_tel = :destinationTel, delivery_time = :deliveryTime, payment_method = :paymentMethod WHERE id=:id;";
+		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
+		template.update(sql, param);
 	}
 
 }

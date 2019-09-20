@@ -473,12 +473,12 @@
                               </java.beans.PropertyChangeSupport>
                             </listeners>
                             <visibility class="net.java.amateras.uml.classdiagram.model.Visibility$1"/>
-                            <name>showOrderItems</name>
+                            <name>confirmOrder</name>
                             <type>String</type>
                             <params>
                               <net.java.amateras.uml.classdiagram.model.Argument>
-                                <name>userId</name>
-                                <type>String</type>
+                                <name>model</name>
+                                <type>Model</type>
                               </net.java.amateras.uml.classdiagram.model.Argument>
                             </params>
                             <isAbstract>false</isAbstract>

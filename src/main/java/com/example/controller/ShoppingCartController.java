@@ -84,7 +84,7 @@ public class ShoppingCartController {
 	
 	@RequestMapping("/show")
 	public String showCart(Model model) {
-		//認証情報を取得
+				//認証情報を取得
 				Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 				//比較用にトークンを退避
 				String compareToken = (String) session.getAttribute("token"); //tokenというセッションキーに対応する値をセッションから取得してString型に変換して代入
