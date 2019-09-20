@@ -52,8 +52,8 @@ public class OrderService {
 			Date today = new Date();
 			order.setOrderDate(today);
 			
+			//宛先の名前・メールアドレス・郵便番号・住所・電話番号をセット
 			order.setDestinationName(form.getDestinationName());
-			order.setDestinationEmail(form.getDestinationEmail());
 			order.setDestinationEmail(form.getDestinationEmail());
 			order.setDestinationZipcode(form.getDestinationZipcode());
 			order.setDestinationAddress(form.getDestinationAddress());
@@ -61,15 +61,18 @@ public class OrderService {
 			
 			//配達日と配達時間をTimestamp型に変換してOrderオブジェクトの配達日時にセット
 			String deliveryDateTime = form.getDeliveryDate() + " " + form.getDeliveryTime();
-	        Timestamp ts = Timestamp.valueOf(deliveryDateTime);
+	        System.out.println("配達日" + deliveryDateTime);
+			Timestamp ts = Timestamp.valueOf(deliveryDateTime);
 	        order.setDeliveryTime(ts);
 			
-			order.setPaymentMethod(form.getPaymentMethod());
+	        //支払い方法をセット
+	        Integer paymantMethod = Integer.parseInt(form.getPaymentMethod());
+			order.setPaymentMethod(paymantMethod);
 			
-			//statusを更新してセット
-			if(form.getPaymentMethod() == 1) {
+			//支払い方法に応じてstatusを更新してセット
+			if(paymantMethod == 1) {
 				order.setStatus(1); 
-			}else if (form.getPaymentMethod() == 2) {
+			}else if (paymantMethod == 2) {
 				order.setStatus(2); 
 			}
 			

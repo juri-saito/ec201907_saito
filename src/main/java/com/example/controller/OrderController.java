@@ -4,6 +4,9 @@ package com.example.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.common.Common;
@@ -29,6 +32,11 @@ public class OrderController {
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@ModelAttribute
+	private OrderReceiveForm setUpOrderReceiveForm() {
+		return new OrderReceiveForm();
+	}
 
 	/**
 	 * 注文内容（ショッピングカート内容）を確認する
@@ -50,7 +58,13 @@ public class OrderController {
 	 * @return　注文完了画面
 	 */
 	@RequestMapping("/finished")
-	public String order(OrderReceiveForm form) {
+	public String order(@Validated OrderReceiveForm form, BindingResult result, Model model) {
+		
+		//エラーが一つでもあれば登録画面に戻る
+		if(result.hasErrors()) {
+			return confirmOrder(model);
+		}
+		
 		//ユーザIDをフォームにセットし、注文情報を更新する
 		form.setUserId(common.GetUserId());
 		orderService.order(form);

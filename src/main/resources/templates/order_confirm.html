@@ -120,7 +120,7 @@
 		</div>
 
 		<!-- table -->
-		<form th:action="@{/order/finished}">
+		<form th:action="@{/order/finished}" th:object="${orderReceiveForm}" method="post">
 			<div class="row">
 				<div
 					class="table-responsive col-lg-offset-3 col-lg-6 col-md-offset-1 col-md-10 col-sm-10 col-xs-12">
@@ -129,12 +129,11 @@
 						<tbody>
 							<tr>
 								<td>
-									<div class="text-center">
-										お名前
-									</div>
+									<div class="text-center" for="destinationName">お名前</div>
 								</td>
 								<td>
-									<input type="text" name="destinationName">
+									<label class="control-label" style="color: red" th:errors="*{destinationName}">氏名を入力してください</label><br>
+									<input type="text" name="destinationName" th:field="*{destinationName}" id="destinationName">
 								</td>
 							</tr>
 							<tr>
@@ -144,6 +143,7 @@
 									</div>
 								</td>
 								<td>
+									<label class="control-label" style="color: red" th:errors="*{destinationEmail}">メールアドレスを入力してください</label><br>
 									<input type="text" name="destinationEmail">
 								</td>
 							</tr>
@@ -154,6 +154,7 @@
 									</div>
 								</td>
 								<td>
+									<label class="control-label" style="color: red" th:errors="*{destinationZipcode}">郵便番号を入力してください</label><br>
 									<input type="text" name="destinationZipcode">&nbsp;&nbsp;<button>住所検索</button>
 								</td>
 							</tr>
@@ -164,6 +165,7 @@
 									</div>
 								</td>
 								<td>
+									<label class="control-label" style="color: red" th:errors="*{destinationAddress}">住所を入力してください</label><br>
 									<input type="text" name="destinationAddress">
 								</td>
 							</tr>
@@ -174,6 +176,7 @@
 									</div>
 								</td>
 								<td>
+									<label class="control-label" style="color: red" th:errors="*{destinationTel}">住所を入力してください</label><br>
 									<input type="text" name="destinationTel">
 								</td>
 							</tr>
@@ -187,11 +190,10 @@
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-12">
-												<label
-													class="control-label" style="color: red" for="inputPeriod">配達日時を入力してください</label>
+												<label class="control-label" style="color: red" for="deliveryDate" th:errors="*{deliveryDate}">配達日時を入力してください</label>
 											</div>
 											<div class="col-sm-5">
-												<input type="date" name="deliveryDate" id="deliveryDate" class="form-control input-sm" />
+												<input type="date" name="deliveryDate" id="deliveryDate" class="form-control input-sm" value="deliveryDate">
 											</div>
 
 										</div>
@@ -303,3 +305,4 @@
 	<script src="js/bootstrap.min.js"></script>
 </body>
 </html>
+
