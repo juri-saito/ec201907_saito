@@ -123,15 +123,13 @@ public class ShoppingCartService {
 	 * @param userId ユーザID
 	 * @return 注文情報
 	 */
-	
 	public Order showLoginUserCart(Integer userId) {
 		//空のorderオブジェクトを作成
 		Order order = new Order();
 		
 		if(orderRepository.findByUserIdAndStatus0(userId) != null) {
 			//①対象ユーザIDに未注文の注文情報（ショッピングカート）があった場合の処理
-			//対象ユーザのショッピングカートからOrderItemListとOrderToppingListを受け取る
-			//該当ユーザのショッピングカートを取得
+			//対象ユーザのショッピングカートを取得
 			order = orderRepository.findByUserIdAndStatus0(userId);
 			order.setUserId(userId);
 
@@ -153,8 +151,19 @@ public class ShoppingCartService {
 			order.setTotalPrice(0);
 			orderRepository.insert(order);
 		}
-		
 		return order;
-
+	}
+	
+	//////////////////////////////////////////
+	///ショッピングカートの中身を削除する/////
+	//////////////////////////////////////////
+	
+	/**
+	 * ショッピングカートの中身を削除する
+	 * @param orderItemId　注文商品ID
+	 */
+	public void deleteOrderItem(Integer orderItemId) {
+		orderItemRepository.deleteById(orderItemId);
+		orderToppingRepository.deleteById(orderItemId);
 	}
 }

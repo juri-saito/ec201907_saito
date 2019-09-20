@@ -53,9 +53,19 @@ public class OrderToppingRepository {
 	 * @return 注文トッピングリスト
 	 */
 	public List<OrderTopping> findByOrderItemId(Integer orderItemId) {
-		String sql = "SELECT id,topping_id,order_item_id FROM order_toppings WHERE order_item_id=:orderItemId";
+		String sql = "SELECT id,topping_id,order_item_id FROM order_toppings WHERE order_item_id = :orderItemId";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("orderItemId", orderItemId);
 		List<OrderTopping> orderToppingList = template.query(sql, param, ORDER_TOPPING_ROW_MAPPER);
 		return orderToppingList;
+	}
+	
+	/**
+	 * 注文トッピングをショッピングカートから削除
+	 * @param orderItemId　注文トッピングID
+	 */
+	public void deleteById(Integer orderItemId) {
+		String sql = "DELETE FROM order_toppings WHERE order_item_id = :orderItemId";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("orderItemId", orderItemId);
+		template.update(sql, param);
 	}
 }

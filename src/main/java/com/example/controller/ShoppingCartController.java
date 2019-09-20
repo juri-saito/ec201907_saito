@@ -38,6 +38,7 @@ public class ShoppingCartController {
 	//////////////////////////////////////////////////////////
 	///ショッピングカートに注文商品と注文トッピングを追加/////
 	//////////////////////////////////////////////////////////
+	
 	/**
 	 * ショッピングカートに注文商品と注文トッピングを追加する.
 	 * @param form 商品の注文情報
@@ -80,6 +81,7 @@ public class ShoppingCartController {
 	//////////////////////////////////////////
 	///ショッピングカートの中身を表示する/////
 	//////////////////////////////////////////
+	
 	@RequestMapping("/show")
 	public String showCart(Model model) {
 		//認証情報を取得
@@ -111,5 +113,14 @@ public class ShoppingCartController {
 					model.addAttribute("order", order);
 				}
 				return "cart_list";
+	}
+	
+	//////////////////////////////////////////
+	///ショッピングカートの中身を削除する/////
+	//////////////////////////////////////////
+	@RequestMapping("/delete")
+	public String deleteOrderItem(Integer orderItemId) {
+		shoppingCartService.deleteOrderItem(orderItemId);
+		return "redirect:/cart/show";
 	}
 }

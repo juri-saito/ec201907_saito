@@ -107,7 +107,9 @@
 							</td>
 							<td>
 								<div class="text-center">
-									<button type="submit" class="btn btn-primary">削除</button>
+									<form th:action="@{/cart/delete}" method="post">
+										<button type="submit" name="orderItemId" class="btn btn-primary" th:value="${orderItem.id}">削除</button>
+									</form>
 								</div>
 							</td>
 						</tr>
