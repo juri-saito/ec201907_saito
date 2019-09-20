@@ -121,11 +121,8 @@
 		<div class="row">
 			<div class="col-xs-offset-2 col-xs-8">
 				<div class="form-group text-center">
-					<div th:if="${order.totalPrice} != 0">
 					<span id="total-price" th:text="'消費税：' + ${order.tax} + '円'">消費税</span><br>
 					<span id="total-price" th:text="'ご注文金額合計：' + ${order.calcTotalPrice} + '円'">注文金額合計(税込)</span>
-					</div>
-					<div th:if="${order.totalPrice} == 0">ショッピングカートに商品がありません</div>
 				</div>
 			</div>
 		</div>

@@ -254,8 +254,8 @@
                               </targetConnections>
                               <children/>
                               <filterProperty/>
-                              <content>cart.html</content>
-                              <old></old>
+                              <content>cart_list.html</content>
+                              <old>cart.html</old>
                             </target>
                             <bendpoints/>
                           </net.java.amateras.uml.classdiagram.model.GeneralizationModel>
@@ -751,8 +751,8 @@
                                                       <constraint>
                                                         <height>-1</height>
                                                         <width>-1</width>
-                                                        <x>1595</x>
-                                                        <y>611</y>
+                                                        <x>1604</x>
+                                                        <y>658</y>
                                                       </constraint>
                                                       <sourceConnections>
                                                         <net.java.amateras.uml.classdiagram.model.DependencyModel reference="../../parent/children/net.java.amateras.uml.classdiagram.model.ClassModel[10]/targetConnections/net.java.amateras.uml.classdiagram.model.DependencyModel"/>

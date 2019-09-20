@@ -85,7 +85,6 @@ public class OrderItemRepository {
 	 * @param orderItemId　注文商品ID
 	 */
 	public void deleteById(Integer orderItemId) {
-		System.out.println(orderItemId);
 		String sql = "DELETE FROM order_items WHERE id=:id;";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", orderItemId);
 		template.update(sql, param);
