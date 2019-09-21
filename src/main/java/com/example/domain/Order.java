@@ -187,6 +187,9 @@ public class Order {
 		int itemsTotal = 0;
 		
 		//税抜き合計金額から税額を算出
+		
+		System.out.println(orderItemList);
+		
 		for (OrderItem orderItem : orderItemList) {
 			itemsTotal = itemsTotal + orderItem.getSubTotal();
 		}

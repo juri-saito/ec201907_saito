@@ -1,5 +1,6 @@
 package com.example.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,7 +137,6 @@ public class ShoppingCartService {
 			//ショッピングカート内の注文商品リストを取得
 			List<OrderItem> orderItemList = orderItemService.findByOrderId(order.getId());
 
-			
 			//注文商品1つ1つに対応する注文トッピングリストを取得して注文商品情報に付与
 			for (OrderItem orderItem : orderItemList) {
 				List<OrderTopping> orderToppingList = orderToppingService.findByOrderItemId(orderItem.getId());
@@ -150,6 +150,9 @@ public class ShoppingCartService {
 			order.setStatus(0);
 			order.setTotalPrice(0);
 			orderRepository.insert(order);
+			
+			List<OrderItem> orderItemList = new ArrayList<>();
+			order.setOrderItemList(orderItemList);
 		}
 		return order;
 	}

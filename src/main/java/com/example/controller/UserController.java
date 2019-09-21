@@ -73,7 +73,9 @@ public class UserController {
 		//ユーザ登録処理
 		userService.insert(user);
 		
-		return "/user/toLogin";
+		System.out.println("ユーザ登録処理");
+		
+		return "login.html";
 	}
 	
 	/**
