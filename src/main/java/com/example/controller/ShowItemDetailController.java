@@ -19,13 +19,13 @@ public class ShowItemDetailController {
 	@Autowired
 	private ShowItemDetailService showItemDetailService;
 	
+	
 	/**
 	 * 商品詳細画面を表示する.
 	 * @return　商品詳細画面
 	 */
 	@RequestMapping("/showDetail")
 	public String showDetail(int id, Model model) {
-		System.out.println(id);
 		model.addAttribute("item", showItemDetailService.findItemById(id));
 		model.addAttribute("toppingList", showItemDetailService.findAllToppings());
 		return "item_detail";

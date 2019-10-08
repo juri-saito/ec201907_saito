@@ -29,7 +29,7 @@ public class OrderReceiveForm {
 	private String destinationEmail;
 	
 	/** 注文郵便番号 */
-	@Pattern(message="入力形式が不正です" , regexp = "[0-9] {7}")
+	@Pattern(message="入力形式が不正です" ,  regexp = "^[0-9]{7}$")
 	private String destinationZipcode;
 	
 	/** 注文住所 */
