@@ -47,6 +47,29 @@ public class ItemRepository {
 		return itemList;
 	}
 	
+	public Integer findAllItemCount() {
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT count(*) FROM items;");
+		SqlParameterSource param = null;
+		Integer count = template.queryForObject(sql.toString(), param, Integer.class); //クラス名のオブジェクトを生成して結果を詰めて返す
+		return count;
+	}
+	
+	/**
+	 * 商品情報を10件検索
+	 * @param startItemCount　どの商品から表示させるかというカウント値（1つのページの先頭の商品番号）
+	 * @return　30件分の商品リスト
+	 */
+	public List<Item> findAPageItems(int startItemCount){
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT id,name,description,price_m,price_l,image_path,deleted ");
+		sql.append("FROM items ORDER BY id ");
+		sql.append("LIMIT 10 OFFSET :startItemCount;");
+		SqlParameterSource param = new MapSqlParameterSource().addValue("startItemCount", startItemCount);
+		List<Item> itemList = template.query(sql.toString(), param, ITEM_ROW_MAPPER);
+		return itemList;
+	}
+	
 	/**
 	 * 商品情報を曖昧検索.
 	 * @param name 検索ワード
