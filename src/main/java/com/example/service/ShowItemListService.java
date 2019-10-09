@@ -52,7 +52,14 @@ public class ShowItemListService {
 	 * 商品情報をあいまい検索
 	 * @return　検索結果リスト
 	 */
-	public List<Item> findLikeName(String name){
-		return itemRepository.findByLikeName(name);
+	public Page<Item> findLikeName(int page, String name, String orderPrice){
+		//どの商品から表示させるかというカウント値（1つのページの先頭の商品）
+		int startItemCount = (page-1) * 6; //1ページに6個の商品を表示する設定
+				
+		//表示させたいページの商品リスト
+		List<Item> list = itemRepository.findByNameOrderPrice(startItemCount, name, orderPrice);
+		//上記で作成した該当ページに表示させる商品一覧をページングできる形に変換して返す
+		Page<Item> itemPage = new PageImpl<Item>(list, PageRequest.of(1, 6), itemRepository.findAllItemCount());
+		return itemPage;
 	}
 }

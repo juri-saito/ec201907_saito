@@ -69,36 +69,6 @@ public class ShowItemListController {
 		return "item_list.html";
 		
 	}
-	
-//	/**
-//	 * トップページに全商品リストを表示
-//	 * @param model　リクエストスコープ
-//	 * @return　トップページ
-//	 */
-//	@RequestMapping("")
-//	public String showAllItems(Model model) {
-//		List<Item> itemList1 = itemService.findAll();
-//		
-//		List<List<Item>> itemList3 = new ArrayList<>();
-//		List<Item> itemList2 = new ArrayList<>();
-//		
-//		for (int i = 1; i < itemList1.size(); i++) {
-//			
-//			//itemList1から１個ずつ取り出したitemをitemList2に格納
-//			itemList2.add(itemList1.get(i-1));
-//			
-//			//3の倍数のとき、itemList3にitemList2を格納。itemList2を空にする。
-//			if(i % 3 == 0) {
-//				itemList3.add(itemList2);
-//				itemList2 = new ArrayList<>();
-//			}
-//		}
-//		//itemList1のitem数が3の倍数個でなくても最後にitemList3にitemList2を格納
-//		itemList3.add(itemList2);
-//		
-//		model.addAttribute("itemList3", itemList3);
-//		return "item_list.html";
-//	}
 
 	/**
 	 * トップページに曖昧検索結果を表示
@@ -107,9 +77,23 @@ public class ShowItemListController {
 	 * @return　トップページ
 	 */
 	@RequestMapping("/findItems")
-	public String findLikeName(String code,Model model) {
-		List<Item> itemList1 = showItemService.findLikeName(code);
+	public String findLikeName(Integer page, String name, String orderPrice, Model model) {
 		
+		//ページング機能追加
+		if(page == null) {
+			//ページ番号の指定が無い場合は1ページ目を表示させる
+			page = 1;
+		}
+		
+		if(orderPrice == null) {
+			orderPrice = "";
+		}
+		
+		Page<Item> itemPage = showItemService.findLikeName(page, name, orderPrice);
+		
+		
+		
+		List<Item> itemList1 = itemPage.getContent();
 		List<List<Item>> itemList3 = new ArrayList<>();
 		List<Item> itemList2 = new ArrayList<>();
 		
@@ -128,6 +112,12 @@ public class ShowItemListController {
 		itemList3.add(itemList2);
 		
 		model.addAttribute("itemList3", itemList3);
+		model.addAttribute("itemPage", itemPage);
+		
+		//ページ番号リストをスコープに格納
+		List<Integer> pageNumbers = calcPageNumbers(model, itemPage);
+		model.addAttribute("pageNumbers", pageNumbers);
+		
 		return "item_list.html";
 	}
 	
