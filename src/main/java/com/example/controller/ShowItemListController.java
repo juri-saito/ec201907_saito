@@ -23,7 +23,7 @@ import com.example.service.ShowItemListService;
 public class ShowItemListController {
 	
 	@Autowired
-	private ShowItemListService itemService;
+	private ShowItemListService showItemService;
 
 	/**
 	 * トップページに全商品リストを表示
@@ -40,12 +40,12 @@ public class ShowItemListController {
 			page = 1;
 		}
 		
-		Page<Item> itemPage = itemService.showListPaging(page);
+		Page<Item> itemPage = showItemService.showListPaging(page);
 		List<Item> itemList1 = itemPage.getContent();
 		List<List<Item>> itemList3 = new ArrayList<>();
 		List<Item> itemList2 = new ArrayList<>();
 		
-		for (int i = 1; i < itemList1.size(); i++) {
+		for (int i = 1; i <= itemList1.size(); i++) {
 			
 			//itemList1から１個ずつ取り出したitemをitemList2に格納
 			itemList2.add(itemList1.get(i-1));
@@ -61,7 +61,13 @@ public class ShowItemListController {
 		
 		model.addAttribute("itemList3", itemList3);
 		model.addAttribute("itemPage", itemPage);
+		
+		//ページ番号リストをスコープに格納
+		List<Integer> pageNumbers = calcPageNumbers(model, itemPage);
+		model.addAttribute("pageNumbers", pageNumbers);
+		
 		return "item_list.html";
+		
 	}
 	
 //	/**
@@ -102,7 +108,7 @@ public class ShowItemListController {
 	 */
 	@RequestMapping("/findItems")
 	public String findLikeName(String code,Model model) {
-		List<Item> itemList1 = itemService.findLikeName(code);
+		List<Item> itemList1 = showItemService.findLikeName(code);
 		
 		List<List<Item>> itemList3 = new ArrayList<>();
 		List<Item> itemList2 = new ArrayList<>();
@@ -123,5 +129,28 @@ public class ShowItemListController {
 		
 		model.addAttribute("itemList3", itemList3);
 		return "item_list.html";
+	}
+	
+	/**
+	 * ページングのリンクに使うページ番号をスコープに格納
+	 * @param model　リクエストパラメータ
+	 * @param itemPage　1ページに表示される商品一覧情報
+	 * @return　ページ番号リスト
+	 */
+	private List<Integer> calcPageNumbers (Model model, Page<Item> itemPage){
+		//総ページ数
+		int totalPages = itemPage.getTotalPages();
+		
+		//空のページ番号リストを作成して初期値nullを入れておく
+		List<Integer> pageNumbers = null;
+		//ページ番号が複数ある場合、
+		if(totalPages > 0) {
+			//ページ番号リストに値を詰め込んでいく
+			pageNumbers = new ArrayList<Integer>();
+			for (int i = 1; i <= totalPages; i++) {
+				pageNumbers.add(i);
+			}
+		}
+		return pageNumbers;
 	}
 }

@@ -39,14 +39,12 @@ public class ShowItemListService {
 	 */
 	public Page<Item> showListPaging(int page){
 		//どの商品から表示させるかというカウント値（1つのページの先頭の商品）
-		int startItemCount = (page-1) * 10; //1ページに10個の商品を表示する設定
+		int startItemCount = (page-1) * 6; //1ページに6個の商品を表示する設定
 		
 		//表示させたいページの商品リスト
 		List<Item> list = itemRepository.findAPageItems(startItemCount);
-		
 		//上記で作成した該当ページに表示させる商品一覧をページングできる形に変換して返す
-		Page<Item> itemPage = new PageImpl<Item>(list, PageRequest.of(page, 10), itemRepository.findAllItemCount());
-		
+		Page<Item> itemPage = new PageImpl<Item>(list, PageRequest.of(1, 6), itemRepository.findAllItemCount());
 		return itemPage;
 	}
 	
