@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.domain.Item;
+import com.example.form.SearchAndSortForm;
 import com.example.service.ShowItemListService;
 
 /**
@@ -23,7 +25,12 @@ import com.example.service.ShowItemListService;
 public class ShowItemListController {
 	
 	@Autowired
-	private ShowItemListService showItemService;
+	private ShowItemListService showItemListService;
+	
+	@ModelAttribute
+	public SearchAndSortForm setUpForm() {
+		return new SearchAndSortForm();
+	}
 
 	/**
 	 * トップページに全商品リストを表示
@@ -40,7 +47,7 @@ public class ShowItemListController {
 			page = 1;
 		}
 		
-		Page<Item> itemPage = showItemService.showListPaging(page);
+		Page<Item> itemPage = showItemListService.showListPaging(page);
 		List<Item> itemList1 = itemPage.getContent();
 		List<List<Item>> itemList3 = new ArrayList<>();
 		List<Item> itemList2 = new ArrayList<>();
@@ -77,19 +84,20 @@ public class ShowItemListController {
 	 * @return　トップページ
 	 */
 	@RequestMapping("/findItems")
-	public String findLikeName(Integer page, String name, String orderPrice, Model model) {
+	public String findByNameOrderPrice(SearchAndSortForm form, Model model) {
+		
 		
 		//ページング機能追加
-		if(page == null) {
+		if(form.getPage() == null) {
 			//ページ番号の指定が無い場合は1ページ目を表示させる
-			page = 1;
+			form.setPage(1);
 		}
 		
-		if(orderPrice == null) {
-			orderPrice = "";
+		if(form.getOrderPrice() == null) {
+			form.setOrderPrice("");
 		}
 		
-		Page<Item> itemPage = showItemService.findLikeName(page, name, orderPrice);
+		Page<Item> itemPage = showItemListService.findLikeName(form);
 		
 		
 		
@@ -97,7 +105,7 @@ public class ShowItemListController {
 		List<List<Item>> itemList3 = new ArrayList<>();
 		List<Item> itemList2 = new ArrayList<>();
 		
-		for (int i = 1; i < itemList1.size(); i++) {
+		for (int i = 1; i <= itemList1.size(); i++) {
 			
 			//itemList1から１個ずつ取り出したitemをitemList2に格納
 			itemList2.add(itemList1.get(i-1));

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.Item;
+import com.example.form.SearchAndSortForm;
 import com.example.repository.ItemRepository;
 
 /**
@@ -26,11 +27,12 @@ public class ShowItemListService {
 
 	/**
 	 * 商品情報を全件検索
+	 * ページング機能実装により使用しなくなりました
 	 * @return　全商品リスト
 	 */
-	public List<Item> findAll(){
-		return itemRepository.findAll();
-	}
+//	public List<Item> findAll(){
+//		return itemRepository.findAll();
+//	}
 	
 	/**
 	 * ページング用メソッド
@@ -48,16 +50,17 @@ public class ShowItemListService {
 		return itemPage;
 	}
 	
+	
 	/**
 	 * 商品情報をあいまい検索
 	 * @return　検索結果リスト
 	 */
-	public Page<Item> findLikeName(int page, String name, String orderPrice){
+	public Page<Item> findLikeName(SearchAndSortForm form){
 		//どの商品から表示させるかというカウント値（1つのページの先頭の商品）
-		int startItemCount = (page-1) * 6; //1ページに6個の商品を表示する設定
+		int startItemCount = (form.getPage()-1) * 6; //1ページに6個の商品を表示する設定
 				
 		//表示させたいページの商品リスト
-		List<Item> list = itemRepository.findByNameOrderPrice(startItemCount, name, orderPrice);
+		List<Item> list = itemRepository.findByNameOrderPrice(startItemCount, form.getName(), form.getOrderPrice());
 		//上記で作成した該当ページに表示させる商品一覧をページングできる形に変換して返す
 		Page<Item> itemPage = new PageImpl<Item>(list, PageRequest.of(1, 6), itemRepository.findAllItemCount());
 		return itemPage;

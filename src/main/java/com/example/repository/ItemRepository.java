@@ -39,14 +39,19 @@ public class ItemRepository {
 
 	/**
 	 * 商品情報を全件検索.
+	 * ページング機能実装により使用しなくなりました
 	 * @return　全商品リスト
 	 */
-	public List<Item> findAll() {
-		String sql = "SELECT id,name,description,price_m,price_l,image_path,deleted FROM items ORDER BY id;";
-		List<Item> itemList = template.query(sql, ITEM_ROW_MAPPER);
-		return itemList;
-	}
+//	public List<Item> findAll() {
+//		String sql = "SELECT id,name,description,price_m,price_l,image_path,deleted FROM items ORDER BY id;";
+//		List<Item> itemList = template.query(sql, ITEM_ROW_MAPPER);
+//		return itemList;
+//	}
 	
+	/**
+	 * 全商品数を取得
+	 * @return　全商品数
+	 */
 	public Integer findAllItemCount() {
 		StringBuilder sql = new StringBuilder();
 		sql.append("SELECT count(*) FROM items;");
@@ -67,33 +72,6 @@ public class ItemRepository {
 		sql.append("LIMIT 6 OFFSET :startItemCount;");
 		SqlParameterSource param = new MapSqlParameterSource().addValue("startItemCount", startItemCount);
 		List<Item> itemList = template.query(sql.toString(), param, ITEM_ROW_MAPPER);
-		return itemList;
-	}
-	
-	/**
-	 * 商品情報を価格の昇順に6件検索
-	 * @param startItemCount　どの商品から表示させるかというカウント値（1つのページの先頭の商品番号）
-	 * @return　6件分の商品リスト
-	 */
-	public List<Item> orderPrice(int startItemCount){
-		StringBuilder sql = new StringBuilder();
-		sql.append("SELECT id,name,description,price_m,price_l,image_path,deleted ");
-		sql.append("FROM items ORDER BY price_m, id ");
-		sql.append("LIMIT 6 OFFSET :startItemCount;");
-		SqlParameterSource param = new MapSqlParameterSource().addValue("startItemCount", startItemCount);
-		List<Item> itemList = template.query(sql.toString(), param, ITEM_ROW_MAPPER);
-		return itemList;
-	}
-	
-	/**
-	 * 商品情報を曖昧検索.
-	 * @param name 検索ワード
-	 * @return 検索結果
-	 */
-	public List<Item> findByLikeName(String name){
-		String sql = "SELECT id,name,description,price_m,price_l,image_path,deleted FROM items WHERE name LIKE :name ORDER BY id;";
-		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+ name + "%");
-		List<Item> itemList = template.query(sql, param, ITEM_ROW_MAPPER);
 		return itemList;
 	}
 	
@@ -119,12 +97,43 @@ public class ItemRepository {
 			sql.append("price_m ASC, ");
 		}
 		
-		sql.append("id;");
+		sql.append("id ");
+		sql.append("LIMIT 6 OFFSET :startItemCount;");
 		
-		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+ name + "%");
+		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+ name + "%").addValue("startItemCount", startItemCount);
 		List<Item> itemList = template.query(sql.toString(), param, ITEM_ROW_MAPPER);
 		return itemList;
 	}
+	
+	/**
+	 * 商品情報を曖昧検索・並び替えするSQL文を作成する
+	 * @param startItemCount
+	 * @param name
+	 * @param orderPrice
+	 * @return　
+	 */
+	private String buildSql(int startItemCount, String name, String orderPrice) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT id,name,description,price_m,price_l,image_path,deleted ");
+		sql.append("FROM items ");
+		
+		if(name != null) {
+			sql.append("WHERE name LIKE :name ");
+		}
+		
+		sql.append("ORDER BY ");
+		
+		if(orderPrice.equals("1")) { //価格の高い順
+			sql.append("price_m DESC, ");
+		}else if (orderPrice.equals("2")) { //価格の低い順
+			sql.append("price_m ASC, ");
+		}
+		
+		sql.append("id;");
+		
+		return sql.toString();
+	}
+	
 	
 	/**
 	 * idから商品情報を取得.

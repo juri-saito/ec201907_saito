@@ -54,12 +54,11 @@
 						<div class="panel-title">商品を検索する</div>
 					</div>
 					<div class="panel-body">
-						<form method="post" action="#" th:action="@{/top/findItems}" class="form-horizontal">
+						<form method="post" action="#" th:action="@{/top/findItems}" class="form-horizontal" th:object="${searchAndSortForm}">
 							<div class="form-group">
 								<label for="code" class="control-label col-sm-2">商品名</label>
 								<div class="col-sm-9">
-									<input type="text" name="name" id="code"
-										class="form-control input-sm" />
+									<input type="text" name="name" id="code" class="form-control input-sm" th:field="*{name}">
 								</div>
 							</div>
 							<div class="text-center">
@@ -67,7 +66,7 @@
 								<button type="reset" value="クリア" class="btn btn-default">クリア</button>
 							</div>
 							<div style="text-align : right">
-							<select name="orderPrice">
+							<select name="orderPrice" th:field="*{orderPrice}">
 								<option value="">--並び替え--</option>
 								<option value="1">価格の高い順</option>
 								<option value="2">価格の低い順</option>

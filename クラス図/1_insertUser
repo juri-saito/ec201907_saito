@@ -451,8 +451,8 @@
                                     <constraint>
                                       <height>111</height>
                                       <width>186</width>
-                                      <x>160</x>
-                                      <y>135</y>
+                                      <x>79</x>
+                                      <y>226</y>
                                     </constraint>
                                     <sourceConnections>
                                       <net.java.amateras.uml.classdiagram.model.GeneralizationModel>
@@ -491,10 +491,10 @@
                                 </java.beans.PropertyChangeSupport>
                               </listeners>
                               <constraint>
-                                <height>133</height>
+                                <height>116</height>
                                 <width>195</width>
-                                <x>152</x>
-                                <y>472</y>
+                                <x>84</x>
+                                <y>392</y>
                               </constraint>
                               <sourceConnections/>
                               <targetConnections>
