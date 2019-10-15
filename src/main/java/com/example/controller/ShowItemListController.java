@@ -94,7 +94,6 @@ public class ShowItemListController {
 	@PostMapping("/findItems")
 	public String findByNameOrderPrice(SearchAndSortForm form, Model model) {
 		
-		System.out.println(form.getName() + "POST");
 		session.setAttribute("form", form);
 		
 		//ページング機能追加
@@ -149,8 +148,6 @@ public class ShowItemListController {
 	@GetMapping("/findItems")
 	public String findByNameOrderPriceGet(SearchAndSortForm form, Model model) {
 		
-		System.out.println(form.getName() + "GET");
-		
 		//ページング機能追加
 		if(form.getPage() == null) {
 			//ページ番号の指定が無い場合は1ページ目を表示させる
@@ -162,8 +159,6 @@ public class ShowItemListController {
 		}
 		
 		Page<Item> itemPage = showItemListService.findByNameOrderPrice(form);
-		
-		
 		
 		List<Item> itemList1 = itemPage.getContent();
 		List<List<Item>> itemList3 = new ArrayList<>();

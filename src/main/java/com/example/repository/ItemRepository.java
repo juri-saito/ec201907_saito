@@ -75,15 +75,15 @@ public class ItemRepository {
 		StringBuilder preSql = buildSql(name, orderPrice);
 		sql.append("SELECT id,name,description,price_m,price_l,image_path,deleted ");
 		sql.append(preSql);
-		preSql.append("ORDER BY ");
+		sql.append("ORDER BY ");
 		
 		if(orderPrice.equals("1")) { //価格の高い順
-			preSql.append("price_m DESC, ");
+			sql.append("price_m DESC, ");
 		}else if (orderPrice.equals("2")) { //価格の低い順
-			preSql.append("price_m ASC, ");
+			sql.append("price_m ASC, ");
 		}
 		
-		preSql.append("id ");
+		sql.append("id ");
 		sql.append("LIMIT 6 OFFSET :startItemCount;");
 		
 		SqlParameterSource param = new MapSqlParameterSource().addValue("name", "%"+ name + "%").addValue("startItemCount", startItemCount);

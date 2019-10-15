@@ -109,7 +109,7 @@
 					<input type="submit" th:value="${pageNumber}" class="btn btn-primary">
 				</a>
 				<!-- 曖昧検索・並び順変更後 -->
-				<a th:href="@{/top/findItems(size=${itemPage.size}, page=${pageNumber}, name=${searchAndSortForm.name})}" 
+				<a th:href="@{/top/findItems(size=${itemPage.size}, page=${pageNumber}, name=${searchAndSortForm.name}, orderPrice=${searchAndSortForm.orderPrice})}" 
 				   th:text=${pageNumber} 
 				   th:class="${pageNumber==itemPage.number + 1}? active"
 				   th:if="${searchAndSortForm}">
