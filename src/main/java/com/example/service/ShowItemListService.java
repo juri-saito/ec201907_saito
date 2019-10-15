@@ -25,17 +25,9 @@ public class ShowItemListService {
 	@Autowired
 	private ItemRepository itemRepository;
 
-	/**
-	 * 商品情報を全件検索
-	 * ページング機能実装により使用しなくなりました
-	 * @return　全商品リスト
-	 */
-//	public List<Item> findAll(){
-//		return itemRepository.findAll();
-//	}
 	
 	/**
-	 * ページング用メソッド
+	 *  商品情報を全件検索
 	 * @param page　表示させたいページ番号
 	 * @return　1ページに表示される商品一覧情報
 	 */
@@ -46,23 +38,42 @@ public class ShowItemListService {
 		//表示させたいページの商品リスト
 		List<Item> list = itemRepository.findAPageItems(startItemCount);
 		//上記で作成した該当ページに表示させる商品一覧をページングできる形に変換して返す
-		Page<Item> itemPage = new PageImpl<Item>(list, PageRequest.of(1, 6), itemRepository.findAllItemCount());
+		Page<Item> itemPage = new PageImpl<Item>(list, PageRequest.of(1, 6), itemRepository.countAllItems());
 		return itemPage;
 	}
 	
 	
 	/**
-	 * 商品情報をあいまい検索
-	 * @return　検索結果リスト
+	 * 商品情報を曖昧検索・並び替えして6件の商品を取得
+	 * @return　商品情報を曖昧検索・並び替えした結果の商品数
 	 */
-	public Page<Item> findLikeName(SearchAndSortForm form){
+	public Page<Item> findByNameOrderPrice(SearchAndSortForm form){
 		//どの商品から表示させるかというカウント値（1つのページの先頭の商品）
 		int startItemCount = (form.getPage()-1) * 6; //1ページに6個の商品を表示する設定
 				
 		//表示させたいページの商品リスト
 		List<Item> list = itemRepository.findByNameOrderPrice(startItemCount, form.getName(), form.getOrderPrice());
 		//上記で作成した該当ページに表示させる商品一覧をページングできる形に変換して返す
-		Page<Item> itemPage = new PageImpl<Item>(list, PageRequest.of(1, 6), itemRepository.findAllItemCount());
+		Page<Item> itemPage = new PageImpl<Item>(list, PageRequest.of(1, 6), itemRepository.countAllItems());
 		return itemPage;
 	}
+	
+	/**
+	 * すべての商品数を取得
+	 * @return　すべての商品数
+	 */
+	public int  countAllItems() {
+		int count = itemRepository.countAllItems();
+		return count;
+	}
+	
+	/**
+	 * 商品情報を曖昧検索・並び替えした結果すべての商品数を取得
+	 * @return　商品情報を曖昧検索・並び替えした結果の商品数
+	 */
+	public int  countByNameOrderPrice(SearchAndSortForm form) {
+		int count = itemRepository.countByNameOrderPrice(form.getName(), form.getOrderPrice());
+		return count;
+	}
+	
 }

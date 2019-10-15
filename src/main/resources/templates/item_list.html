@@ -101,9 +101,18 @@
 		</div>
 		<div class="text-center">
 			<div th:if="${itemPage.totalPages > 0}" th:each="pageNumber : ${pageNumbers}"  class="pagination">
+				<!-- トップページ -->
 				<a th:href="@{/top(size=${itemPage.size}, page=${pageNumber}, name=${name})}" 
 				   th:text=${pageNumber} 
-				   th:class="${pageNumber==itemPage.number + 1}? active">
+				   th:class="${pageNumber==itemPage.number + 1}? active"
+				   th:unless="${searchAndSortForm}">
+					<input type="submit" th:value="${pageNumber}" class="btn btn-primary">
+				</a>
+				<!-- 曖昧検索・並び順変更後 -->
+				<a th:href="@{/top/findItems(size=${itemPage.size}, page=${pageNumber}, name=${searchAndSortForm.name})}" 
+				   th:text=${pageNumber} 
+				   th:class="${pageNumber==itemPage.number + 1}? active"
+				   th:if="${searchAndSortForm}">
 					<input type="submit" th:value="${pageNumber}" class="btn btn-primary">
 				</a>
 			</div>

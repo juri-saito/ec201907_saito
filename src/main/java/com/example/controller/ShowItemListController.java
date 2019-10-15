@@ -4,11 +4,15 @@ package com.example.controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.domain.Item;
@@ -27,13 +31,16 @@ public class ShowItemListController {
 	@Autowired
 	private ShowItemListService showItemListService;
 	
+	@Autowired
+	private HttpSession session;
+	
 	@ModelAttribute
 	public SearchAndSortForm setUpForm() {
 		return new SearchAndSortForm();
 	}
 
 	/**
-	 * トップページに全商品リストを表示
+	 * トップページに商品リストを表示
 	 * @param page　出力したいページ番号
 	 * @param model　リクエストスコープ
 	 * @return　トップページ
@@ -70,7 +77,8 @@ public class ShowItemListController {
 		model.addAttribute("itemPage", itemPage);
 		
 		//ページ番号リストをスコープに格納
-		List<Integer> pageNumbers = calcPageNumbers(model, itemPage);
+		int totalPages = (int)Math.ceil(showItemListService.countAllItems() / 6);
+		List<Integer> pageNumbers = calcPageNumbers(model, totalPages);
 		model.addAttribute("pageNumbers", pageNumbers);
 		
 		return "item_list.html";
@@ -78,14 +86,16 @@ public class ShowItemListController {
 	}
 
 	/**
-	 * トップページに曖昧検索結果を表示
+	 * トップページに曖昧検索・並び替えした結果のリストを表示
 	 * @param name　曖昧検索ワード
 	 * @param model　リクエストスコープ
 	 * @return　トップページ
 	 */
-	@RequestMapping("/findItems")
+	@PostMapping("/findItems")
 	public String findByNameOrderPrice(SearchAndSortForm form, Model model) {
 		
+		System.out.println(form.getName() + "POST");
+		session.setAttribute("form", form);
 		
 		//ページング機能追加
 		if(form.getPage() == null) {
@@ -97,7 +107,7 @@ public class ShowItemListController {
 			form.setOrderPrice("");
 		}
 		
-		Page<Item> itemPage = showItemListService.findLikeName(form);
+		Page<Item> itemPage = showItemListService.findByNameOrderPrice(form);
 		
 		
 		
@@ -123,7 +133,62 @@ public class ShowItemListController {
 		model.addAttribute("itemPage", itemPage);
 		
 		//ページ番号リストをスコープに格納
-		List<Integer> pageNumbers = calcPageNumbers(model, itemPage);
+		int totalPages = (int)Math.ceil(showItemListService.countByNameOrderPrice(form)/6);
+		List<Integer> pageNumbers = calcPageNumbers(model, totalPages);
+		model.addAttribute("pageNumbers", pageNumbers);
+		
+		return "item_list.html";
+	}
+	
+	/**
+	 * トップページに曖昧検索・並び替えした結果のリストを表示
+	 * @param name　曖昧検索ワード
+	 * @param model　リクエストスコープ
+	 * @return　トップページ
+	 */
+	@GetMapping("/findItems")
+	public String findByNameOrderPriceGet(SearchAndSortForm form, Model model) {
+		
+		System.out.println(form.getName() + "GET");
+		
+		//ページング機能追加
+		if(form.getPage() == null) {
+			//ページ番号の指定が無い場合は1ページ目を表示させる
+			form.setPage(1);
+		}
+		
+		if(form.getOrderPrice() == null) {
+			form.setOrderPrice("");
+		}
+		
+		Page<Item> itemPage = showItemListService.findByNameOrderPrice(form);
+		
+		
+		
+		List<Item> itemList1 = itemPage.getContent();
+		List<List<Item>> itemList3 = new ArrayList<>();
+		List<Item> itemList2 = new ArrayList<>();
+		
+		for (int i = 1; i <= itemList1.size(); i++) {
+			
+			//itemList1から１個ずつ取り出したitemをitemList2に格納
+			itemList2.add(itemList1.get(i-1));
+			
+			//3の倍数のとき、itemList3にitemList2を格納。itemList2を空にする。
+			if(i % 3 == 0) {
+				itemList3.add(itemList2);
+				itemList2 = new ArrayList<>();
+			}
+		}
+		//itemList1のitem数が3の倍数個でなくても最後にitemList3にitemList2を格納
+		itemList3.add(itemList2);
+		
+		model.addAttribute("itemList3", itemList3);
+		model.addAttribute("itemPage", itemPage);
+		
+		//ページ番号リストをスコープに格納
+		int totalPages = (int)Math.ceil(showItemListService.countByNameOrderPrice(form)/6);
+		List<Integer> pageNumbers = calcPageNumbers(model, totalPages);
 		model.addAttribute("pageNumbers", pageNumbers);
 		
 		return "item_list.html";
@@ -132,12 +197,10 @@ public class ShowItemListController {
 	/**
 	 * ページングのリンクに使うページ番号をスコープに格納
 	 * @param model　リクエストパラメータ
-	 * @param itemPage　1ページに表示される商品一覧情報
+	 * @param totalPages　総ページ数
 	 * @return　ページ番号リスト
 	 */
-	private List<Integer> calcPageNumbers (Model model, Page<Item> itemPage){
-		//総ページ数
-		int totalPages = itemPage.getTotalPages();
+	private List<Integer> calcPageNumbers (Model model, int totalPages){
 		
 		//空のページ番号リストを作成して初期値nullを入れておく
 		List<Integer> pageNumbers = null;
