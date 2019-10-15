@@ -22,3 +22,14 @@ span#total-price {
 	color: #ff0000;
 }
 
+/* 注文履歴の配達日の表の色 */
+.order-date{
+	color:white;
+	background-color:gray;
+}
+
+/* 表内のオブジェクト位置 */
+.center{
+	text-align: center;
+	vertical-align: middle;
+}

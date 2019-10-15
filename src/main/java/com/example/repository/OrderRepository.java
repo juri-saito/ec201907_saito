@@ -202,4 +202,51 @@ public class OrderRepository {
 		template.update(sql, param);
 	}
 
+	
+	/**
+	 * 特定のユーザーの注文済みの注文情報（注文履歴）を返す.
+	 * @param userId ユーザID
+	 * @return　注文済みの注文情報（注文履歴）
+	 */
+	public List<Order> findByUserIdAndStatus1 (Integer userId) {
+		//ordersテーブルとorder_itemテーブルとorder_toppingテーブルを全行結合し、
+		//特定のユーザIDの未注文の注文情報（ショッピングカート）を呼び出す
+		String sql = "SELECT"
+				+ " t1.id AS t1_id"
+				+ " ,t1.user_id AS t1_user_id"
+				+ " ,t1.status AS t1_status"
+				+ " ,t1.total_price AS t1_total_price"
+				+ " ,t1.order_date AS t1_order_date"
+				+ " ,t1.destination_name AS t1_destination_name"
+				+ " ,t1.destination_email AS t1_destination_email"
+				+ " ,t1.destination_zipcode AS t1_destination_zipcode"
+				+ " ,t1.destination_address AS t1_destination_address"
+				+ " ,t1.destination_tel AS t1_destination_tel"
+				+ " ,t1.delivery_time AS t1_delively_time"
+				+ " ,t1.payment_method AS t1_payment_method"
+				+ " ,t2.id AS t2_id"
+				+ " ,t2.item_id AS t2_item_id"
+				+ " ,t2.order_id AS t2_order_id"
+				+ " ,t2.quantity AS t2_quantity"
+				+ " ,t2.size AS t2_size"
+				+ " ,t3.id AS t3_id"
+				+ " ,t3.topping_id AS t3_topping_id"
+				+ " ,t3.order_item_id AS t3_order_item_id"
+				+ " FROM "
+				+ " ( orders AS t1"
+				+ " FULL OUTER JOIN order_items AS t2"
+				+ " ON t1.id=t2.order_id"
+				+ " )"
+				+ " FULL OUTER JOIN order_toppings AS t3"
+				+ " ON t2.id=t3.order_item_id"
+				+ " WHERE t1.user_id=:userId AND t1.status=1";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("userId", userId);
+		List<Order> orderList = template.query(sql, param, ORDER_EXTRACTOR);
+		//該当ユーザのショッピングカートが空の場合nullを返す
+		if(orderList.size() == 0) {
+			return null;
+		}
+		return orderList;
+	}
+	
 }

@@ -1,6 +1,8 @@
 package com.example.controller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.common.Common;
 import com.example.domain.Order;
 import com.example.form.OrderReceiveForm;
+import com.example.service.OrderHistoryService;
 import com.example.service.OrderService;
 import com.example.service.ShoppingCartService;
 
@@ -32,6 +35,9 @@ public class OrderController {
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private OrderHistoryService orderHistoryService; 
 	
 	@ModelAttribute
 	private OrderReceiveForm setUpOrderReceiveForm() {
@@ -70,5 +76,18 @@ public class OrderController {
 		orderService.order(form);
 		
 		return "order_finished";
+	}
+	
+	/**
+	 * 注文履歴ページを表示する
+	 * @return　注文履歴ページ
+	 */
+	@RequestMapping("/history")
+	public String showOrderHistory(Model model) {
+		//ログイン中のユーザの未注文の注文情報（ショッピングカート）を表示
+		List<Order> orderList = orderHistoryService.showOrderHistory(common.GetUserId());
+		model.addAttribute("orderList", orderList);
+		
+		return "order_history";
 	}
 }
