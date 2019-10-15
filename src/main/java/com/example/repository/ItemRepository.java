@@ -39,6 +39,18 @@ public class ItemRepository {
 
 	
 	/**
+	 * 全商品リストを取得
+	 * @return　全商品リスト
+	 */
+	public List<Item> findAllItems() {
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT id,name,description,price_m,price_l,image_path,deleted FROM items;");
+		List<Item> allItemList = template.query(sql.toString(), ITEM_ROW_MAPPER); //クラス名のオブジェクトを生成して結果を詰めて返す
+		return allItemList;
+	}
+	
+	
+	/**
 	 * 全商品数を取得
 	 * @return　全商品数
 	 */

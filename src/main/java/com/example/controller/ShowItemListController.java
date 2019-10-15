@@ -81,8 +81,10 @@ public class ShowItemListController {
 		List<Integer> pageNumbers = calcPageNumbers(model, totalPages);
 		model.addAttribute("pageNumbers", pageNumbers);
 		
-		return "item_list.html";
+		//オートコンプリート用にjavascriptの配列の中身を文字列で作ってスコープへ格納
+		this.getItemListForAutocomplete(model);
 		
+		return "item_list.html";
 	}
 
 	/**
@@ -136,6 +138,9 @@ public class ShowItemListController {
 		List<Integer> pageNumbers = calcPageNumbers(model, totalPages);
 		model.addAttribute("pageNumbers", pageNumbers);
 		
+		//オートコンプリート用にjavascriptの配列の中身を文字列で作ってスコープへ格納
+		this.getItemListForAutocomplete(model);
+		
 		return "item_list.html";
 	}
 	
@@ -186,6 +191,9 @@ public class ShowItemListController {
 		List<Integer> pageNumbers = calcPageNumbers(model, totalPages);
 		model.addAttribute("pageNumbers", pageNumbers);
 		
+		//オートコンプリート用にjavascriptの配列の中身を文字列で作ってスコープへ格納
+		this.getItemListForAutocomplete(model);
+		
 		return "item_list.html";
 	}
 	
@@ -209,4 +217,15 @@ public class ShowItemListController {
 		}
 		return pageNumbers;
 	}
+	
+	/**
+	 * オートコンプリート用にjavascriptの配列の中身を文字列で作ってスコープへ格納
+	 * @param model
+	 */
+	public void getItemListForAutocomplete(Model model) {
+		List<Item> serchItemList = showItemListService.findAll();
+		StringBuilder itemListForAutocomplete = showItemListService.getItemListForAutocomplete(serchItemList);
+		model.addAttribute("itemListForAutocomplete", itemListForAutocomplete);
+	}
+			
 }

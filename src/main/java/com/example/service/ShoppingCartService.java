@@ -89,7 +89,6 @@ public class ShoppingCartService {
 			order.setStatus(0);
 			order.setTotalPrice(0);
 			order = orderRepository.insert(order);
-			System.out.println("ShoppingCartService内　オーダーidは" + order.getId());
 			
 			//OrderItemオブジェクトを新規作成し、フォームで受け取った注文商品情報をDBに挿入、自動採番されたidを含むorderItemを受け取る
 			OrderItem orderItem = new OrderItem();

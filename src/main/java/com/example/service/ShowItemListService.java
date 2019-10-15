@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +26,15 @@ public class ShowItemListService {
 	@Autowired
 	private ItemRepository itemRepository;
 
+	/**
+	 * 全商品リストを取得
+	 * @return 全商品リスト
+	 */
+	public List<Item> findAll(){
+		List<Item> allItemList = itemRepository.findAllItems();
+		return allItemList;
+	}
+	
 	
 	/**
 	 *  商品情報を全件検索
@@ -74,6 +84,20 @@ public class ShowItemListService {
 	public int  countByNameOrderPrice(SearchAndSortForm form) {
 		int count = itemRepository.countByNameOrderPrice(form.getName(), form.getOrderPrice());
 		return count;
+	}
+	
+	public StringBuilder getItemListForAutocomplete(List<Item> itemList) {
+		StringBuilder itemListForAutocomplete = new StringBuilder();
+		for (int i = 0; i < itemList.size(); i++) {
+			if(i != 0) {
+				itemListForAutocomplete.append(",");
+			}
+			Item item = itemRepository.findAllItems().get(i);
+			itemListForAutocomplete.append("\"");
+			itemListForAutocomplete.append(item.getName());
+			itemListForAutocomplete.append("\"");
+		}
+		return itemListForAutocomplete;
 	}
 	
 }

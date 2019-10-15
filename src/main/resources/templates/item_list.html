@@ -12,9 +12,18 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 	$(function(){
+		<!-- 並び替え -->
 		$("#pulldown").on("change", function(){
 			$("#forward").submit();
 		})
+		
+		<!-- オートコンプリート -->
+		var availableTags = [ [(${itemListForAutocomplete})] ];
+	　　
+		$("#searchName").autocomplete({
+			source: availableTags,
+			noCase: true
+		});
 	});
 </script>
 <!--[if lt IE 9]>
@@ -68,7 +77,7 @@
 							<div class="form-group">
 								<label for="code" class="control-label col-sm-2">商品名</label>
 								<div class="col-sm-9">
-									<input type="text" name="name" id="code" class="form-control input-sm" th:field="*{name}">
+									<input type="text" name="name" id="searchName" class="form-control input-sm" th:field="*{name}">
 								</div>
 							</div>
 							<div class="text-center">
@@ -129,7 +138,7 @@
 		</div>
 	</div>
 	<!-- end container -->
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
+	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script> -->
 </body>
 </html>
