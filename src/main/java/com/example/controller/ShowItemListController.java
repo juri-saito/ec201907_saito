@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.thymeleaf.context.Context;
 
 import com.example.domain.Item;
 import com.example.form.SearchAndSortForm;
+import com.example.service.SendMailService;
 import com.example.service.ShowItemListService;
 
 /**

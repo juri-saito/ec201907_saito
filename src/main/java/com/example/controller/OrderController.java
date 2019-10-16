@@ -10,12 +10,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.thymeleaf.context.Context;
 
 import com.example.common.Common;
 import com.example.domain.Order;
 import com.example.form.OrderReceiveForm;
 import com.example.service.OrderHistoryService;
 import com.example.service.OrderService;
+import com.example.service.SendMailService;
 import com.example.service.ShoppingCartService;
 
 /**
@@ -38,6 +40,9 @@ public class OrderController {
 	
 	@Autowired
 	private OrderHistoryService orderHistoryService; 
+	
+	@Autowired
+	private SendMailService sendMailService;
 	
 	@ModelAttribute
 	private OrderReceiveForm setUpOrderReceiveForm() {
@@ -73,7 +78,16 @@ public class OrderController {
 		
 		//ユーザIDをフォームにセットし、注文情報を更新する
 		form.setUserId(common.GetUserId());
-		orderService.order(form);
+		Order order = orderService.order(form);
+		
+		//注文完了メール送信
+		Context context = new Context();
+		context.setVariable("name", order.getDestinationName());
+		context.setVariable("order", order);
+		context.setVariable("bootstrap", "/css/bootstrap.css");
+		context.setVariable("imgCurry", "/img_curry/");
+		String email = order.getDestinationEmail();
+		sendMailService.sendMail(context, email);
 		
 		return "order_finished";
 	}

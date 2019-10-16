@@ -5,9 +5,25 @@ spring:
     username: postgres
     password: postgres
 
+
+  mail:
+    default-encoding: UTF-8
+    host: smtp.gmail.com
+    port: 587
+    username: ${GoogleMail:bar} #環境変数のメールアドレスを取得
+    password: ${GooglePass:bar} #環境変数のメールパスワードを取得
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true    
+
   jmx:       
     enabled: false
+    
     
 server:
  servlet:
   context-path: /ec-201907b-saito
+  

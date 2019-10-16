@@ -38,7 +38,7 @@ public class OrderService {
 	 * @param orderItem　注文商品
 	 * @param orderTopping　注文トッピング
 	 */
-	public void order(OrderReceiveForm form) {
+	public Order order(OrderReceiveForm form) {
 		
 			//ユーザIDを取得
 			Integer userId = form.getUserId();
@@ -93,6 +93,8 @@ public class OrderService {
 			
 			//注文をする（注文情報を更新する）
 			orderRepository.order(order);
+			
+			return order;
 	}
 	
 }
