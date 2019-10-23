@@ -62,7 +62,7 @@
 									placeholder="Email" th:field="*{email}">
 							</div>
 							<div class="form-group">
-								<label for="inputZipcode">郵便番号:</label>
+								<label for="inputZipcode">郵便番号（ハイフンなし）:</label>
 								<label class="control-label" style="color: red" for="inputError" th:errors="*{zipcode}">郵便番号を入力してください</label>
 									<input type="button" value="住所検索" id="search">
 								<input type="text" id="zipcode" class="form-control" placeholder="Zipcode" th:field="*{zipcode}">
@@ -74,14 +74,14 @@
 								<input type="text" id="address" class="form-control" placeholder="Address" th:field="*{address}">
 							</div>
 							<div class="form-group">
-								<label for="inputTel">電話番号:</label>
+								<label for="inputTel">電話番号（ハイフンなし）:</label>
 								<label
 									class="control-label" style="color: red" for="inputError" th:errors="*{telephone}">電話番号を入力してください</label>
 								<input type="text" id="inputTel" class="form-control"
 									placeholder="Tel" th:field="*{telephone}">
 							</div>
 							<div class="form-group">
-								<label for="inputPassword">パスワード:</label>
+								<label for="inputPassword">パスワード(半角英大文字・小文字・数字を各1字以上含めてください):</label>
 								<label
 									class="control-label" style="color: red" for="inputError" th:errors="*{password}">パスワードを入力してください</label>
 								<input type="text" id="inputPassword" class="form-control"

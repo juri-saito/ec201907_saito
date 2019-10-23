@@ -1,6 +1,8 @@
 package com.example.form;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 
 /**
  * ユーザ情報登録時に使用するフォーム.
@@ -15,11 +17,20 @@ public class InsertUserForm {
 		private String name;
 		
 		/**	Eメール */
+		@Email( message = "メールアドレスが不正です" )
 		@NotBlank(message = "メールアドレスを入力してください")
 		private String email;
 		
 		/**	パスワード */
 		@NotBlank(message = "パスワードを入力してください")
+		
+		
+//			@Pattern(message = "パスワードが不正です", regexp = "^(?-i)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,32}\b"),
+			@Pattern(message = "半角小文字を1字以上含む必要があります", regexp = "^(?-i)(?=.*[a-z])[a-zA-Z\\d]\\b")
+			@Pattern(message = "半角大文字を1字以上含む必要があります", regexp = "^(?-i)(?=.*[A-Z])[a-zA-Z\\d]\\b")
+			@Pattern(message = "半角数字を1字以上含む必要があります", regexp = "^(?-i)(?=.*\\d)[a-zA-Z\\d]\\b")
+			@Pattern(message = "8文字以上32文字以内にしてください", regexp = "^\\w{8,32}\\b")
+		
 		private String password;
 		
 		/**	確認用パスワード */
@@ -28,6 +39,7 @@ public class InsertUserForm {
 		
 		/**	郵便番号 */
 		@NotBlank(message = "郵便番号を入力してください")
+		@Pattern(message = "入力形式が不正です", regexp = "^[0-9]{7}$")
 		private String zipcode;
 		
 		/**	住所 */
@@ -36,6 +48,7 @@ public class InsertUserForm {
 		
 		/**	電話番号 */
 		@NotBlank(message = "お電話番号を入力してください")
+		@Pattern(message = "入力形式が不正です", regexp = "^[0-9]{10,11}$")
 		private String telephone;
 		
 		@Override

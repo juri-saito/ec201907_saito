@@ -84,7 +84,7 @@ public class OrderController {
 		Context context = new Context();
 		context.setVariable("name", order.getDestinationName());
 		context.setVariable("order", order);
-		context.setVariable("bootstrap", "/css/bootstrap.css");
+		context.setVariable("bootstrap", "../../static/css/bootstrap.css");
 		context.setVariable("imgCurry", "/img_curry/");
 		String email = order.getDestinationEmail();
 		sendMailService.sendMail(context, email);

@@ -1,9 +1,15 @@
 package com.example.controller;
 
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +20,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.thymeleaf.context.Context;
 
 import com.example.domain.Item;
 import com.example.form.SearchAndSortForm;
-import com.example.service.SendMailService;
 import com.example.service.ShowItemListService;
 
 /**
@@ -48,8 +52,9 @@ public class ShowItemListController {
 	 * @return　トップページ
 	 */
 	@RequestMapping("")
-	public String showAllItems(Model model, Integer page) {
-		
+	public String showAllItems(Model model, Integer page, HttpServletRequest request)
+			throws ServletException, IOException, UnsupportedEncodingException {
+		 
 		//ページング機能追加
 		if(page == null) {
 			//ページ番号の指定が無い場合は1ページ目を表示させる
@@ -86,9 +91,12 @@ public class ShowItemListController {
 		//オートコンプリート用にjavascriptの配列の中身を文字列で作ってスコープへ格納
 		this.getItemListForAutocomplete(model);
 		
+		//最近見た商品リストをスコープへ格納
+		this.getRecentView(model, request);
+		
 		return "item_list.html";
 	}
-
+	
 	/**
 	 * トップページに曖昧検索・並び替えした結果のリストを表示
 	 * @param name　曖昧検索ワード
@@ -96,7 +104,8 @@ public class ShowItemListController {
 	 * @return　トップページ
 	 */
 	@PostMapping("/findItems")
-	public String findByNameOrderPrice(SearchAndSortForm form, Model model) {
+	public String findByNameOrderPrice(SearchAndSortForm form, Model model, HttpServletRequest request) 
+			throws ServletException, IOException, UnsupportedEncodingException {
 		
 		session.setAttribute("form", form);
 		
@@ -143,6 +152,9 @@ public class ShowItemListController {
 		//オートコンプリート用にjavascriptの配列の中身を文字列で作ってスコープへ格納
 		this.getItemListForAutocomplete(model);
 		
+		//最近見た商品リストをスコープへ格納
+		this.getRecentView(model, request);
+		
 		return "item_list.html";
 	}
 	
@@ -153,7 +165,8 @@ public class ShowItemListController {
 	 * @return　トップページ
 	 */
 	@GetMapping("/findItems")
-	public String findByNameOrderPriceGet(SearchAndSortForm form, Model model) {
+	public String findByNameOrderPriceGet(SearchAndSortForm form, Model model, HttpServletRequest request) 
+			throws ServletException, IOException, UnsupportedEncodingException {
 		
 		//ページング機能追加
 		if(form.getPage() == null) {
@@ -196,6 +209,9 @@ public class ShowItemListController {
 		//オートコンプリート用にjavascriptの配列の中身を文字列で作ってスコープへ格納
 		this.getItemListForAutocomplete(model);
 		
+		//最近見た商品リストをスコープへ格納
+		this.getRecentView(model, request);
+		
 		return "item_list.html";
 	}
 	
@@ -229,5 +245,32 @@ public class ShowItemListController {
 		StringBuilder itemListForAutocomplete = showItemListService.getItemListForAutocomplete(serchItemList);
 		model.addAttribute("itemListForAutocomplete", itemListForAutocomplete);
 	}
-			
+
+	/**
+	 * 最近見た商品リストをスコープへ格納
+	 * @param model
+	 */
+	public void getRecentView(Model model, HttpServletRequest request) throws UnsupportedEncodingException  {
+		//最近見た商品リストをスコープへ格納
+		String value = null;
+		Cookie cookie[] = request.getCookies();
+		List<Item> recentViewList = new ArrayList<>();
+		if(cookie != null){
+		    for(int i = 0; i < cookie.length; i++){
+		    	//最近見た商品のcookieか判定
+		        if(cookie[i].getName().equals("recent_view")){
+		            value = URLDecoder.decode(cookie[i].getValue(), "UTF-8");
+		            //cookie値を配列に変換
+		            String array[] = value.split(",");
+		            for (int j = 0; j < array.length; j++) {
+		            	Item item = showItemListService.findById(Integer.parseInt(array[j]));
+		            	recentViewList.add(item);
+					}
+		        }
+		    }
+		}
+		model.addAttribute("recentViewList", recentViewList);
+	}
+	
+	
 }

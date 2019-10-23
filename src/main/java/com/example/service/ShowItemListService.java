@@ -35,6 +35,16 @@ public class ShowItemListService {
 		return allItemList;
 	}
 	
+	/**
+	 * idから商品情報を取得
+	 * @param id 商品ID
+	 * @return　商品情報
+	 */
+	public Item findById(int id){
+		Item item = itemRepository.findById(id);
+		return item;
+	}
+	
 	
 	/**
 	 *  商品情報を全件検索

@@ -99,8 +99,21 @@
 
 		<!-- table -->
 		<div class="row">
-			<div
-				class="table-responsive col-lg-offset-1 col-lg-10 col-md-offset-1 col-md-10 col-sm-10 col-xs-12">
+			<div class="table-responsive col-lg-offset-1 col-lg-10 col-md-offset-1 col-md-10 col-sm-10 col-xs-12">
+				<h4>最近見た商品</h4>
+				<table class="table table-striped">
+					<tbody>
+						<tr>
+							<th th:each="recentView:${recentViewList}">
+								<a th:href="@{'/item/showDetail?id=' + ${recentView.id}}">
+									<img  th:src="@{'/img_curry/' + ${recentView.imagePath}}" class="img-responsive img-rounded" width="200" height="600">
+								</a><br>
+								<a th:href="@{'/item/showDetail?id=' + ${recentView.id}}" th:text="${recentView.name}">じゃがバターベーコン</a><br>
+							</th>
+						</tr>
+					</tbody>
+				</table>
+				<h4>商品一覧</h4>
 				<table class="table table-striped">
 					<tbody>
 						<tr th:each="itemList2:${itemList3}">
