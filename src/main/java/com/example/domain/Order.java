@@ -208,9 +208,9 @@ public class Order {
 		
 		//税抜き合計金額から税額を算出
 		for (OrderItem orderItem : orderItemList) {
-			itemsTotal = itemsTotal + orderItem.getSubTotal();
+			itemsTotal += orderItem.getSubTotal();
 		}
-		tax = (int)(itemsTotal * 0.8);
+		tax = (int)(itemsTotal * 0.1);
 		
 		//税込み合計金額を算出
 		CalcTotalPrice = itemsTotal + tax;
