@@ -192,7 +192,7 @@ public class Order {
 		for (OrderItem orderItem : orderItemList) {
 			itemsTotal = itemsTotal + orderItem.getSubTotal();
 		}
-		tax = (int)(itemsTotal * 0.08);
+		tax = (int)(itemsTotal * 0.1);
 		
 		return tax;
 	}
