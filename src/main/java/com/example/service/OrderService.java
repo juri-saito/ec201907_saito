@@ -8,10 +8,13 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
+import com.example.domain.CreditCardInfo;
 import com.example.domain.Order;
 import com.example.domain.OrderItem;
 import com.example.domain.OrderTopping;
+import com.example.domain.SettlementResult;
 import com.example.form.OrderReceiveForm;
 import com.example.repository.OrderRepository;
 
@@ -32,6 +35,9 @@ public class OrderService {
 	
 	@Autowired
 	private OrderToppingService orderToppingService;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 	
 	/**
 	 * 注文をする（注文情報を更新する）
@@ -71,8 +77,10 @@ public class OrderService {
 			
 			//支払い方法に応じてstatusを更新してセット
 			if(paymantMethod == 1) {
+				//銀行振込のとき
 				order.setStatus(1); 
 			}else if (paymantMethod == 2) {
+				//クレジットカード払いのとき
 				order.setStatus(2); 
 			}
 			
@@ -97,4 +105,28 @@ public class OrderService {
 			return order;
 	}
 	
+	/**
+	 * クレジットカード決済処理
+	 * @param form
+	 * @return　決済処理
+	 */
+	public SettlementResult Settlement(OrderReceiveForm form) {
+		//クレジットカード払いのとき
+		//クレジットカード情報をドメインに詰める
+		CreditCardInfo creditCardInfo = new CreditCardInfo();
+		creditCardInfo.setUser_id(1234);
+		creditCardInfo.setOrder_number(1234567890);
+		creditCardInfo.setAmount(form.getlongAmount());
+		creditCardInfo.setCard_number(1234567890);;
+		creditCardInfo.setCard_exp_year(form.getIntCard_exp_year());
+		creditCardInfo.setCard_exp_month(form.getIntCard_exp_month());
+		creditCardInfo.setCard_name(form.getCard_name());
+		creditCardInfo.setCard_cvv(form.getIntCard_cvv());
+		//WebAPI呼び出し
+		String url = "http://172.16.0.13:8080/web-api-sample/credit-card/payment";
+		//レスポンスを取得
+		SettlementResult response = restTemplate.postForObject(url, creditCardInfo, SettlementResult.class);
+		
+		return response;
+	}
 }

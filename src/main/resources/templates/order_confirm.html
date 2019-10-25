@@ -17,6 +17,7 @@
 </head>
 <body>
 	<div class="container">
+	<form th:action="@{/order/finished}" th:object="${orderReceiveForm}" method="post">
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<!-- Brand and toggle get grouped for better mobile display -->
@@ -118,12 +119,13 @@
 				<div class="form-group text-center">
 					<span id="total-price" th:text="'消費税：' + ${order.tax} + '円'">消費税</span><br>
 					<span id="total-price" th:text="'ご注文金額合計：' + ${order.calcTotalPrice} + '円'">注文金額合計(税込)</span>
+					<input type="hidden" name="amount" th:value="${order.calcTotalPrice}">
 				</div>
 			</div>
 		</div>
 
 		<!-- table -->
-		<form th:action="@{/order/finished}" th:object="${orderReceiveForm}" method="post">
+
 			<div class="row">
 				<div
 					class="table-responsive col-lg-offset-3 col-lg-6 col-md-offset-1 col-md-10 col-sm-10 col-xs-12">
@@ -136,7 +138,7 @@
 								</td>
 								<td>
 									<label class="control-label" style="color: red" th:errors="*{destinationName}">氏名を入力してください</label><br>
-									<input type="text" name="destinationName" th:field="*{destinationName}" id="destinationName">
+									<input type="text" name="destinationName" id="destinationName" th:field="*{destinationName}">
 								</td>
 							</tr>
 							<tr>
@@ -147,7 +149,7 @@
 								</td>
 								<td>
 									<label class="control-label" style="color: red" th:errors="*{destinationEmail}">メールアドレスを入力してください</label><br>
-									<input type="text" name="destinationEmail">
+									<input type="text" name="destinationEmail" th:field="*{destinationEmail}">
 								</td>
 							</tr>
 							<tr>
@@ -158,7 +160,7 @@
 								</td>
 								<td>
 									<label class="control-label" style="color: red" th:errors="*{destinationZipcode}">郵便番号を入力してください</label><br>
-									<input type="text" name="destinationZipcode" id="zipcode">&nbsp;&nbsp;
+									<input type="text" name="destinationZipcode" id="zipcode" th:field="*{destinationZipcode}">&nbsp;&nbsp;
 									<button type="button" id="search">住所検索</button>
 								</td>
 							</tr>
@@ -170,7 +172,7 @@
 								</td>
 								<td>
 									<label class="control-label" style="color: red" th:errors="*{destinationAddress}">住所を入力してください</label><br>
-									<input type="text" name="destinationAddress" id="address">
+									<input type="text" name="destinationAddress" id="address" th:field="*{destinationAddress}">
 								</td>
 							</tr>
 							<tr>
@@ -181,7 +183,7 @@
 								</td>
 								<td>
 									<label class="control-label" style="color: red" th:errors="*{destinationTel}">住所を入力してください</label><br>
-									<input type="text" name="destinationTel">
+									<input type="text" name="destinationTel" th:field="*{destinationTel}">
 								</td>
 							</tr>
 							<tr>
@@ -197,7 +199,7 @@
 												<label class="control-label" style="color: red" for="deliveryDate" th:errors="*{deliveryDate}">配達日時を入力してください</label>
 											</div>
 											<div class="col-sm-5">
-												<input type="date" name="deliveryDate" id="deliveryDate" class="form-control input-sm" value="deliveryDate">
+												<input type="date" name="deliveryDate" id="deliveryDate" class="form-control input-sm" value="deliveryDate" th:field="*{deliveryDate}">
 											</div>
 
 										</div>
@@ -257,10 +259,11 @@
 					<table class="table table-striped">
 						<tbody>
 							<tr>
+								<label class="control-label" style="color: red" th:field="*{card_exp_year}" th:errors="*{paymentMethod}">お支払い方法をご選択ください</label>
 								<td>
 									<div class="text-center">
 										<label class="radio-inline">
-											<input type="radio" name="paymentMethod" checked="checked" value=1>
+											<input type="radio" name="paymentMethod" checked="checked" value=1 th:field="*{paymentMethod}">
 											銀行振込
 										</label>
 									</div>
@@ -269,7 +272,7 @@
 									<div class="row">
 										<div class="col-sm-12">
 											<label class="radio-inline">
-												<input type="radio" name="paymentMethod" checked="checked" value=2>
+												<input type="radio" name="paymentMethod" checked="checked" value=2 th:field="*{paymentMethod}">
 												クレジットカード
 											</label>
 										</div>
@@ -285,9 +288,10 @@
 								<td>
 									<div class="row">
 										<div class="col-sm-12">
-											<label class="radio-inline">
-												<input type="text" name="creditCardNum">
-											</label>
+											<div class="radio-inline">
+											<label class="control-label" style="color: red" th:field="*{card_exp_year}" th:errors="*{card_number}">クレジットカード番号が不正です</label>
+												<input type="text" name="card_number">
+											</div>
 										</div>
 									</div>
 								</td>
@@ -299,10 +303,11 @@
 									</div>
 								</td>
 								<td>
+									<label class="control-label" style="color: red" th:field="*{card_exp_year}" th:errors="*{card_exp_year}">不正な有効期限です</label>
 									<div class="row">
 										<div class="col-sm-12">
-											<label class="radio-inline">
-												<select class="form-control" name="expirationMonth">
+											<div class="radio-inline">
+												<select class="form-control" name="card_exp_month">
 													<option value="1">01</option>
 													<option value="2">02</option>
 													<option value="3">03</option>
@@ -316,9 +321,9 @@
 													<option value="11">11</option>
 													<option value="12">12</option>
 												</select>	
-											</label>
+											</div>
 											<label class="radio-inline">
-												<select class="form-control" name="expirationMonth" id="expirationMonth">
+												<select class="form-control" name="card_exp_year" id="expirationMonth">
 												</select>	
 											</label>
 										</div>
@@ -334,9 +339,10 @@
 								<td>
 									<div class="row">
 										<div class="col-sm-12">
-											<label class="radio-inline">
-												<input type="text" name="holder">
-											</label>
+											<div class="radio-inline" >
+											<label class="control-label" style="color: red" th:errors="*{card_name}">カード名義人を入力してください</label>
+												<input type="text" name="card_name" th:field="*{card_name}">
+											</div>
 										</div>
 									</div>
 								</td>
@@ -350,9 +356,10 @@
 								<td>
 									<div class="row">
 										<div class="col-sm-12">
-											<label class="radio-inline">
-												<input type="text" name="securityCode">
-											</label>
+											<div class="radio-inline">
+												<label class="control-label" style="color: red" th:errors="*{card_cvv}">セキュリティコードが誤っています</label>
+												<input type="text" name="card_cvv" th:field="*{card_cvv}">
+											</div>
 										</div>
 									</div>
 								</td>

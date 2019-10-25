@@ -38,6 +38,7 @@ public class OrderReceiveForm {
 	
 	/** 注文電話番号 */
 	@NotBlank(message="電話番号を入力してください。")
+	@Pattern(message="入力形式が不正です" ,  regexp = "^[0-9]{11}$")
 	private String destinationTel;
 	
 	/** 配達日 */
@@ -57,15 +58,39 @@ public class OrderReceiveForm {
 	public Integer getUserId() {
 		return userId;
 	}
+	
+	/** 利用者ID */
+	private String user_id;
+	
+	/** 注文NO */
+	private String order_number;
+	
+	/** 決済金額 */
+	private String amount;
+	
+	/** クレジットカード番号 */
+	@NotBlank(message = "クレジットカード番号を入力してください")
+	@Pattern(message="入力形式が不正です" ,  regexp = "^[0-9]{14,16}$")
+	private String card_number;
+	
+	/** カード有効期限（年） */
+	@NotBlank(message = "カード有効期限（年）を入力してください")
+	private String card_exp_year;
+	
+	/** カード有効期限（月） */
+	@NotBlank(message = "カード有効期限（月）を入力してください")
+	private String card_exp_month;
+	
+	/** カード名義人 */
+	@NotBlank(message = "カード名義人を入力してください")
+	@Pattern(message="入力形式が不正です" ,  regexp = "^[a-z]{1,50}$")
+	private String card_name;
+	
+	/** セキュリティコード */
+	@Pattern(message="入力形式が不正です" ,  regexp = "^[0-9]{2,3}$")
+	@NotBlank(message = "セキュリティコードを入力してください")
+	private String card_cvv;
 
-	@Override
-	public String toString() {
-		return "OrderReceiveForm [userId=" + userId + ", orderDate=" + orderDate + ", destinationName="
-				+ destinationName + ", destinationEmail=" + destinationEmail + ", destinationZipcode="
-				+ destinationZipcode + ", destinationAddress=" + destinationAddress + ", destinationTel="
-				+ destinationTel + ", deliveryDate=" + deliveryDate + ", deliveryTime=" + deliveryTime
-				+ ", paymentMethod=" + paymentMethod + "]";
-	}
 
 	public Date getOrderDate() {
 		return orderDate;
@@ -139,8 +164,103 @@ public class OrderReceiveForm {
 		this.paymentMethod = paymentMethod;
 	}
 
+	public String getUser_id() {
+		return user_id;
+	}
+
+	public void setUser_id(String user_id) {
+		this.user_id = user_id;
+	}
+
+	public String getOrder_number() {
+		return order_number;
+	}
+
+	public void setOrder_number(String order_number) {
+		this.order_number = order_number;
+	}
+
+	public String getAmount() {
+		return amount;
+	}
+
+	public void setAmount(String amount) {
+		this.amount = amount;
+	}
+
+	public String getCard_number() {
+		return card_number;
+	}
+
+	public void setCard_number(String card_number) {
+		this.card_number = card_number;
+	}
+
+	public String getCard_exp_year() {
+		return card_exp_year;
+	}
+
+	public void setCard_exp_year(String card_exp_year) {
+		this.card_exp_year = card_exp_year;
+	}
+
+	public String getCard_exp_month() {
+		return card_exp_month;
+	}
+
+	public void setCard_exp_month(String card_exp_month) {
+		this.card_exp_month = card_exp_month;
+	}
+
+	public String getCard_name() {
+		return card_name;
+	}
+
+	public void setCard_name(String card_name) {
+		this.card_name = card_name;
+	}
+
+	public String getCard_cvv() {
+		return card_cvv;
+	}
+
+	public void setCard_cvv(String card_cvv) {
+		this.card_cvv = card_cvv;
+	}
+
 	public void setUserId(Integer userId) {
 		this.userId = userId;
 	}
+
+	public long getlongAmount() {
+		return Integer.parseInt(amount);
+	}
 	
+	public int getIntUser_id() {
+		return Integer.parseInt(user_id);
+	}
+	
+	public long getLongOrder_number() {
+		return Integer.parseInt(order_number);
+	}
+	
+	public long getLongAmount() {
+		return Integer.parseInt(amount);
+	}
+	
+	public long getLongCard_number() {
+		return Integer.parseInt(card_number);
+	}
+	
+	public int getIntCard_exp_year() {
+		return Integer.parseInt(card_exp_year);
+	}
+	
+	public int getIntCard_exp_month() {
+		return Integer.parseInt(card_exp_month);
+	}
+	
+	public int getIntCard_cvv() {
+		return Integer.parseInt(card_cvv);
+	}
 }

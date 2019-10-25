@@ -14,6 +14,7 @@ import org.thymeleaf.context.Context;
 
 import com.example.common.Common;
 import com.example.domain.Order;
+import com.example.domain.SettlementResult;
 import com.example.form.OrderReceiveForm;
 import com.example.service.OrderHistoryService;
 import com.example.service.OrderService;
@@ -71,10 +72,38 @@ public class OrderController {
 	@RequestMapping("/finished")
 	public String order(@Validated OrderReceiveForm form, BindingResult result, Model model) {
 		
-		//エラーが一つでもあれば登録画面に戻る
-		if(result.hasErrors()) {
-			return confirmOrder(model);
-		}
+		//支払い方法が選択されていない場合登録画面に戻る
+  		if(form.getPaymentMethod() == null) {
+  			return confirmOrder(model);
+  		}
+		
+  		 //エラーが一つでもあれば登録画面に戻る
+  		if(result.hasErrors()) {
+  			System.out.println(result.getAllErrors());
+  			return confirmOrder(model);
+  		}
+  		
+		//クレジットカード払いのとき
+        Integer paymantMethod = Integer.parseInt(form.getPaymentMethod());
+        if (paymantMethod == 2) {
+        	//決済処理
+        	SettlementResult response = orderService.Settlement(form);
+        	//決済結果を確認
+    		if(response.getError_code().equals("E-01")) {
+    			result.rejectValue("card_exp_year", "", "カードの有効期限が切れています");
+    			result.rejectValue("card_exp_month", "", "カードの有効期限が切れています");
+    		}else if(response.getError_code().equals("E-02")) {
+    			result.rejectValue("card_cvv", "", "セキュリティコードが誤っています");
+    		}else if(response.getError_code().equals("E-03")) {
+    			result.rejectValue("card_exp_year", "", "カードの有効期限は半角数字でご入力ください");
+    			result.rejectValue("card_exp_month", "", "カードの有効期限は半角数字でご入力ください");
+    		}
+        }	
+        
+        //エラーが一つでもあれば登録画面に戻る
+  		if(result.hasErrors()) {
+  			return confirmOrder(model);
+  		}
 		
 		//ユーザIDをフォームにセットし、注文情報を更新する
 		form.setUserId(common.GetUserId());
