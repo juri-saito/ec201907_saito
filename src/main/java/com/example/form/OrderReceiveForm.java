@@ -13,6 +13,14 @@ import javax.validation.constraints.Pattern;
  */
 public class OrderReceiveForm {
 	
+	 /**
+	  * クレジットカード払いのグループをインタフェースで定義
+	 * @author juri.saito
+	 *
+	 */
+	public static interface PayByCreditCard {
+	    };
+	
 	/** ユーザID */
 	private Integer userId;
 
@@ -69,26 +77,26 @@ public class OrderReceiveForm {
 	private String amount;
 	
 	/** クレジットカード番号 */
-	@NotBlank(message = "クレジットカード番号を入力してください")
-	@Pattern(message="入力形式が不正です" ,  regexp = "^[0-9]{14,16}$")
+	@NotBlank(message = "クレジットカード番号を入力してください", groups= PayByCreditCard.class)
+	@Pattern(message="入力形式が不正です" ,  regexp = "^[0-9]{14,16}$", groups= PayByCreditCard.class)
 	private String card_number;
 	
 	/** カード有効期限（年） */
-	@NotBlank(message = "カード有効期限（年）を入力してください")
+	@NotBlank(message = "カード有効期限（年）を入力してください", groups= PayByCreditCard.class)
 	private String card_exp_year;
 	
 	/** カード有効期限（月） */
-	@NotBlank(message = "カード有効期限（月）を入力してください")
+	@NotBlank(message = "カード有効期限（月）を入力してください", groups= PayByCreditCard.class)
 	private String card_exp_month;
 	
 	/** カード名義人 */
-	@NotBlank(message = "カード名義人を入力してください")
-	@Pattern(message="入力形式が不正です" ,  regexp = "^[a-z]{1,50}$")
+	@NotBlank(message = "カード名義人を入力してください", groups= PayByCreditCard.class)
+	@Pattern(message="入力形式が不正です" ,  regexp = "^[a-z]{1,50}$", groups= PayByCreditCard.class)
 	private String card_name;
 	
 	/** セキュリティコード */
-	@Pattern(message="入力形式が不正です" ,  regexp = "^[0-9]{2,3}$")
-	@NotBlank(message = "セキュリティコードを入力してください")
+	@Pattern(message="入力形式が不正です" ,  regexp = "^[0-9]{2,3}$", groups= PayByCreditCard.class)
+	@NotBlank(message = "セキュリティコードを入力してください", groups= PayByCreditCard.class)
 	private String card_cvv;
 
 

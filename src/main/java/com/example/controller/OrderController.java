@@ -3,6 +3,8 @@ package com.example.controller;
 
 import java.util.List;
 
+import javax.validation.groups.Default;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +18,7 @@ import com.example.common.Common;
 import com.example.domain.Order;
 import com.example.domain.SettlementResult;
 import com.example.form.OrderReceiveForm;
+import com.example.form.OrderReceiveForm.PayByCreditCard;
 import com.example.service.OrderHistoryService;
 import com.example.service.OrderService;
 import com.example.service.SendMailService;
@@ -66,11 +69,12 @@ public class OrderController {
 	}
 	
 	/**
-	 * 注文する（注文情報を更新する）
+	 * 銀行払いで注文処理を行う
 	 * @return　注文完了画面
 	 */
-	@RequestMapping("/finished")
-	public String order(@Validated OrderReceiveForm form, BindingResult result, Model model) {
+	@RequestMapping(value = "/finished", params = {"paymentMethod=1"})
+	public String orderAndPayByBank(@Validated({Default.class}) OrderReceiveForm form, BindingResult result, Model model) {
+//	public String order(@Validated OrderReceiveForm form, BindingResult result, Model model) {
 		
 		//支払い方法が選択されていない場合登録画面に戻る
   		if(form.getPaymentMethod() == null) {
@@ -82,29 +86,61 @@ public class OrderController {
   			System.out.println(result.getAllErrors());
   			return confirmOrder(model);
   		}
-  		
-		//クレジットカード払いのとき
-        Integer paymantMethod = Integer.parseInt(form.getPaymentMethod());
-        if (paymantMethod == 2) {
-        	//決済処理
-        	SettlementResult response = orderService.Settlement(form);
-        	//決済結果を確認
-    		if(response.getError_code().equals("E-01")) {
-    			result.rejectValue("card_exp_year", "", "カードの有効期限が切れています");
-    			result.rejectValue("card_exp_month", "", "カードの有効期限が切れています");
-    		}else if(response.getError_code().equals("E-02")) {
-    			result.rejectValue("card_cvv", "", "セキュリティコードが誤っています");
-    		}else if(response.getError_code().equals("E-03")) {
-    			result.rejectValue("card_exp_year", "", "カードの有効期限は半角数字でご入力ください");
-    			result.rejectValue("card_exp_month", "", "カードの有効期限は半角数字でご入力ください");
-    		}
-        }	
-        
-        //エラーが一つでもあれば登録画面に戻る
-  		if(result.hasErrors()) {
-  			return confirmOrder(model);
-  		}
+
+  		//注文を情報を更新してメールを送る
+		this.order(form, model);
 		
+		return "order_finished";
+	}
+	/**
+	 *  クレジットカード払いで注文処理を行う
+	 * @return　注文完了画面
+	 */
+	@RequestMapping(value = "/finished", params = {"paymentMethod=2"})
+	public String orderAndPayByCredit(@Validated({PayByCreditCard.class, Default.class}) OrderReceiveForm form, BindingResult result, Model model) {
+//	public String order(@Validated OrderReceiveForm form, BindingResult result, Model model) {
+		
+		//支払い方法が選択されていない場合登録画面に戻る
+		if(form.getPaymentMethod() == null) {
+			return confirmOrder(model);
+		}
+		
+		//エラーが一つでもあれば登録画面に戻る
+		if(result.hasErrors()) {
+			System.out.println(result.getAllErrors());
+			return confirmOrder(model);
+		}
+		
+		//クレジットカード払いのとき
+		Integer paymantMethod = Integer.parseInt(form.getPaymentMethod());
+		if (paymantMethod == 2) {
+			//決済処理
+			SettlementResult response = orderService.Settlement(form);
+			//決済結果を確認
+			if(response.getError_code().equals("E-01")) {
+				result.rejectValue("card_exp_year", "", "カードの有効期限が切れています");
+				result.rejectValue("card_exp_month", "", "カードの有効期限が切れています");
+			}else if(response.getError_code().equals("E-02")) {
+				result.rejectValue("card_cvv", "", "セキュリティコードが誤っています");
+			}else if(response.getError_code().equals("E-03")) {
+				result.rejectValue("card_exp_year", "", "カードの有効期限は半角数字でご入力ください");
+				result.rejectValue("card_exp_month", "", "カードの有効期限は半角数字でご入力ください");
+			}
+		}	
+		
+		//注文を情報を更新してメールを送る
+		this.order(form, model);
+		
+		return "order_finished";
+	}
+	
+	/**
+	 * 注文を情報を更新してメールを送る
+	 * @param form　注文フォーム
+	 * @param model リクエストスコープ
+	 * @return　注文完了ページ
+	 */
+	public void order(OrderReceiveForm form, Model model ) {
 		//ユーザIDをフォームにセットし、注文情報を更新する
 		form.setUserId(common.GetUserId());
 		Order order = orderService.order(form);
@@ -117,9 +153,8 @@ public class OrderController {
 		context.setVariable("imgCurry", "/img_curry/");
 		String email = order.getDestinationEmail();
 		sendMailService.sendMail(context, email);
-		
-		return "order_finished";
 	}
+	
 	
 	/**
 	 * 注文履歴ページを表示する
