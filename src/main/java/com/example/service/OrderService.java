@@ -99,6 +99,9 @@ public class OrderService {
 			//税込み合計金額を算出してセット
 			order.setTotalPrice(order.getCalcTotalPrice());
 			
+			//注文番号冒頭の年月日を表す値をセット
+			order.setOrdeDaterNum(order.getOrderDate());
+			
 			//注文をする（注文情報を更新する）
 			orderRepository.order(order);
 			

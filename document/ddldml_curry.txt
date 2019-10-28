@@ -104,7 +104,17 @@ create table orders (
   , destination_tel varchar(15)
   , delivery_time timestamp
   , payment_method integer
+  , order_num varchar(14)
   ) ;
+  
+--注文番号シーケンスの作成
+CREATE SEQUENCE annual_order
+    INCREMENT BY 1
+    MAXVALUE 99999999
+    START WITH 1
+    OWNED BY orders.id
+    NO CYCLE
+;
 
 -- 注文商品
 drop table if exists order_items cascade;

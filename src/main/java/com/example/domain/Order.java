@@ -1,6 +1,7 @@
 package com.example.domain;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -57,13 +58,17 @@ public class Order {
 	/** 注文商品リスト */
 	private List<OrderItem> orderItemList;
 	
+	/** 注文番号冒頭の年月日を表す値 */
+	private String orderDateNum;
+	
 	@Override
 	public String toString() {
 		return "Order [id=" + id + ", userId=" + userId + ", status=" + status + ", totalPrice=" + totalPrice
 				+ ", orderDate=" + orderDate + ", destinationName=" + destinationName + ", destinationEmail="
 				+ destinationEmail + ", destinationZipcode=" + destinationZipcode + ", destinationAddress="
 				+ destinationAddress + ", destinationTel=" + destinationTel + ", deliveryTime=" + deliveryTime
-				+ ", paymentMethod=" + paymentMethod + ", user=" + user + ", orderItemList=" + orderItemList + "]";
+				+ ", paymentMethod=" + paymentMethod + ", user=" + user + ", orderItemList=" + orderItemList
+				+ ", orderNum=" + orderDateNum + "]";
 	}
 
 	public Integer getId() {
@@ -177,6 +182,21 @@ public class Order {
 	public void setOrderItemList(List<OrderItem> orderItem) {
 		this.orderItemList = orderItem;
 	}
+
+	public String getOrderDateNum() {
+		orderDateNum = new SimpleDateFormat("yyyyMMdd").format(orderDate);
+		return orderDateNum;
+	}
+	
+	public void setOrdeDaterNum(String orderDateNum) {
+		this.orderDateNum = orderDateNum;
+	}
+	
+	public void setOrdeDaterNum(Date orderDate) {
+		orderDateNum = new SimpleDateFormat("yyyyMMdd").format(orderDate);
+		this.orderDateNum = orderDateNum;
+	}
+	
 
 	/**
 	 * 税額を算出

@@ -197,9 +197,25 @@ public class OrderRepository {
 	 * @param order　注文情報
 	 */
 	public void order(Order order) {
-		String sql = "UPDATE orders SET status = :status, total_price = :totalPrice, order_date = :orderDate, destination_name = :destinationName, destination_email = :destinationEmail, destination_zipcode = :destinationZipcode, destination_address = :destinationAddress, destination_tel = :destinationTel, delivery_time = :deliveryTime, payment_method = :paymentMethod WHERE id=:id;";
+		StringBuilder sql = new StringBuilder();
+		sql.append("UPDATE orders SET ");
+		sql.append("status = :status, ");
+		sql.append("total_price = :totalPrice, ");
+		sql.append("order_date = :orderDate, ");
+		sql.append("destination_name = :destinationName, ");
+		sql.append("destination_email = :destinationEmail, ");
+		sql.append("destination_zipcode = :destinationZipcode, ");
+		sql.append("destination_address = :destinationAddress, ");
+		sql.append("destination_tel = :destinationTel, ");
+		sql.append("delivery_time = :deliveryTime, ");
+		sql.append("payment_method = :paymentMethod ");
+		sql.append("WHERE id=:id;");
+		sql.append("UPDATE orders SET ");
+		sql.append("order_num = ");
+		sql.append("( select :orderDateNum || to_char(nextval('annual_order'), 'FM000000')) ");
+		sql.append("where id = :id");
 		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
-		template.update(sql, param);
+		template.update(sql.toString(), param);
 	}
 
 	
