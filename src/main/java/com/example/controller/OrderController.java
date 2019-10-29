@@ -98,7 +98,6 @@ public class OrderController {
 	 */
 	@RequestMapping(value = "/finished", params = {"paymentMethod=2"})
 	public String orderAndPayByCredit(@Validated({PayByCreditCard.class, Default.class}) OrderReceiveForm form, BindingResult result, Model model) {
-//	public String order(@Validated OrderReceiveForm form, BindingResult result, Model model) {
 		
 		//支払い方法が選択されていない場合登録画面に戻る
 		if(form.getPaymentMethod() == null) {

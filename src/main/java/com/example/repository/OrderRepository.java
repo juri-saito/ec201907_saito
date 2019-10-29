@@ -194,10 +194,75 @@ public class OrderRepository {
 	
 	/**
 	 * 注文をする（注文情報を更新する）
+	 * 注文年が変わらないとき
 	 * @param order　注文情報
 	 */
 	public void order(Order order) {
 		StringBuilder sql = new StringBuilder();
+		//注文情報の更新
+		sql = this.upDateOrder(order);
+		
+		//注文番号を取得してセット
+		sql.append("UPDATE orders SET ");
+		sql.append("order_num = ");
+		sql.append("( select :orderDateNum || to_char(nextval('annual_order'), 'FM000000')) ");
+		sql.append("where id = :id");
+		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
+		template.update(sql.toString(), param);
+	}
+	
+	/**
+	 * 注文をする（注文情報を更新する）
+	 * 注文年が変わるとき
+	 * @param order　注文情報
+	 */
+	public void orderAndResetSeq(Order order) {
+		StringBuilder sql = new StringBuilder();
+		//注文情報の更新
+		sql = this.upDateOrder(order);
+		
+		//シーケンスの削除
+		sql.append("drop sequence annual_order;");
+		//シーケンスの作成
+		sql.append("CREATE SEQUENCE annual_order ");
+		sql.append("INCREMENT BY 1 ");
+		sql.append("MAXVALUE 999999 ");
+		sql.append("START WITH 1 ");
+		sql.append("OWNED BY orders.id ");
+		sql.append("NO CYCLE;");
+		//注文番号を取得してセット
+		sql.append("UPDATE orders SET ");
+		sql.append("order_num = ");
+		sql.append("( select :orderDateNum || to_char(nextval('annual_order'), 'FM000000')) ");
+		sql.append("where id = :id");
+		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
+		template.update(sql.toString(), param);
+	}
+
+	/**
+	 * 最後の注文番号の年を取得する
+	 * @return 最後の注文番号の年
+	 */
+	public int getLatestOrder() {
+		StringBuilder sql = new StringBuilder();
+		sql.append("select substring((select Max(order_num) from orders),1,4);");
+		SqlParameterSource param = null;
+		int latestDateOrder = 0;
+		try {
+			latestDateOrder = template.queryForObject(sql.toString(), param, Integer.class);
+		}catch (NullPointerException e) {
+		}
+		return latestDateOrder;
+	}
+	
+	/**
+	 * 注文情報の更新をするSQLを作成
+	 * @param order 注文情報
+	 * @return 注文情報の更新をするSQLをあ
+	 */
+	public StringBuilder upDateOrder(Order order) {
+		StringBuilder sql = new StringBuilder();
+		//注文情報の更新
 		sql.append("UPDATE orders SET ");
 		sql.append("status = :status, ");
 		sql.append("total_price = :totalPrice, ");
@@ -210,14 +275,8 @@ public class OrderRepository {
 		sql.append("delivery_time = :deliveryTime, ");
 		sql.append("payment_method = :paymentMethod ");
 		sql.append("WHERE id=:id;");
-		sql.append("UPDATE orders SET ");
-		sql.append("order_num = ");
-		sql.append("( select :orderDateNum || to_char(nextval('annual_order'), 'FM000000')) ");
-		sql.append("where id = :id");
-		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
-		template.update(sql.toString(), param);
+		return sql;
 	}
-
 	
 	/**
 	 * 特定のユーザーの注文済みの注文情報（注文履歴）を返す.

@@ -58,6 +58,9 @@ public class OrderService {
 			Date today = new Date();
 			order.setOrderDate(today);
 			
+			//注文日の年だけ取得
+			int orderYear = today.getYear() + 1900;
+			
 			//宛先の名前・メールアドレス・郵便番号・住所・電話番号をセット
 			order.setDestinationName(form.getDestinationName());
 			order.setDestinationEmail(form.getDestinationEmail());
@@ -102,8 +105,17 @@ public class OrderService {
 			//注文番号冒頭の年月日を表す値をセット
 			order.setOrdeDaterNum(order.getOrderDate());
 			
-			//注文をする（注文情報を更新する）
-			orderRepository.order(order);
+			//最後の注文番号の年を取得する
+			int latestOrderYear = orderRepository.getLatestOrder();
+			
+			if(orderYear == latestOrderYear) {
+				//注文年が変わらないときの注文
+				orderRepository.order(order);
+			}else {
+				//注文年が変わるときの注文
+				orderRepository.orderAndResetSeq(order);
+			}
+			
 			
 			return order;
 	}
