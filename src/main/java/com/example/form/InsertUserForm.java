@@ -26,9 +26,9 @@ public class InsertUserForm {
 		
 		
 //			@Pattern(message = "パスワードが不正です", regexp = "^(?-i)(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,32}\b"),
-			@Pattern(message = "半角小文字を1字以上含む必要があります", regexp = "^(?-i)(?=.*[a-z])[a-zA-Z\\d]\\b")
-			@Pattern(message = "半角大文字を1字以上含む必要があります", regexp = "^(?-i)(?=.*[A-Z])[a-zA-Z\\d]\\b")
-			@Pattern(message = "半角数字を1字以上含む必要があります", regexp = "^(?-i)(?=.*\\d)[a-zA-Z\\d]\\b")
+			@Pattern(message = "半角小文字を1字以上含む必要があります", regexp = "^(?-i)(?=.*[a-z])[a-zA-Z\\d]{0,}\\b")
+			@Pattern(message = "半角大文字を1字以上含む必要があります", regexp = "^(?-i)(?=.*[A-Z])[a-zA-Z\\d]{0,}\\b")
+			@Pattern(message = "半角数字を1字以上含む必要があります", regexp = "^(?-i)(?=.*\\d)[a-zA-Z\\d]{0,}\\b")
 			@Pattern(message = "8文字以上32文字以内にしてください", regexp = "^\\w{8,32}\\b")
 		
 		private String password;

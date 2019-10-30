@@ -35,6 +35,11 @@ public class UserController {
 	private HttpSession session;
 
 	@ModelAttribute
+	public InsertUserForm setUpInsertUserForm() {
+		return new InsertUserForm();
+	}
+	
+	@ModelAttribute
 	public UpdateUserForm setUpUpdateUserForm() {
 		return new UpdateUserForm();
 	}
