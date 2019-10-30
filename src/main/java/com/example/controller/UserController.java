@@ -160,4 +160,33 @@ public class UserController {
 		}
 	
 	}
+	
+	/**
+	 * 退会画面を出力.
+	 * 
+	 * @return
+	 */
+	@RequestMapping("/toDelete")
+	public String toDelete(Principal principal, Model model) {
+		User currentUser = userService.inputCurrentUser(principal);
+		model.addAttribute("currentUser", currentUser);
+		return "delete_user.html";
+	}
+
+	/**
+	 * ユーザ情報削除.
+	 * 
+	 * @param form   ユーザ情報削除用フォーム
+	 * @param result エラーメッセージを格納
+	 * @return ログイン画面へリダイレクト
+	 */
+	@RequestMapping("/delete")
+	public String delete(Principal principal) {
+
+		User currentUser = userService.inputCurrentUser(principal);
+
+		// 削除処理
+		userService.delete(currentUser.getId());
+		return "redirect:/logout";
+	}
 }

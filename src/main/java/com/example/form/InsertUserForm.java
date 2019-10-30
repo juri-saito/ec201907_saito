@@ -51,11 +51,14 @@ public class InsertUserForm {
 		@Pattern(message = "入力形式が不正です", regexp = "^[0-9]{10,11}$")
 		private String telephone;
 		
+		/** 権限 */
+		private String Role;
+
 		@Override
 		public String toString() {
 			return "InsertUserForm [name=" + name + ", email=" + email + ", password=" + password
 					+ ", confirmationPassword=" + confirmationPassword + ", zipcode=" + zipcode + ", address=" + address
-					+ ", telephone=" + telephone + "]";
+					+ ", telephone=" + telephone + ", Role=" + Role + "]";
 		}
 
 		public String getName() {
@@ -113,6 +116,14 @@ public class InsertUserForm {
 		public void setTelephone(String telephone) {
 			this.telephone = telephone;
 		}
-		
 
+		public String getRole() {
+			return Role;
+		}
+
+		public void setRole(String role) {
+			Role = role;
+		}
+		
+		
 }

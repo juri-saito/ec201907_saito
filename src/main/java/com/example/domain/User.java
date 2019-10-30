@@ -33,6 +33,9 @@ public class User {
 	/**	電話番号 */
 	private String telephone;
 	
+	/** 入退会状況 */
+	private Integer status;
+	
 	/** 権限 */
 	private String role;
 	
@@ -41,7 +44,7 @@ public class User {
 	 */
 	public User() {
 	}
-
+	
 	
 	/**
 	 * 初期化用コンストラクタ
@@ -52,9 +55,11 @@ public class User {
 	 * @param zipcode　郵便番号
 	 * @param address　住所
 	 * @param telephone　電話番号
+	 * @param status　入退会状況
+	 * @param role　権限
 	 */
 	public User(Integer id, String name, String email, String password, String zipcode, String address,
-			String telephone, String role) {
+			String telephone, Integer status, String role) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -63,6 +68,7 @@ public class User {
 		this.zipcode = zipcode;
 		this.address = address;
 		this.telephone = telephone;
+		this.status = status;
 		this.role = role;
 	}
 
@@ -71,7 +77,8 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", email=" + email + ", password=" + password + ", zipcode="
-				+ zipcode + ", address=" + address + ", telephone=" + telephone + "]";
+				+ zipcode + ", address=" + address + ", telephone=" + telephone + ", status=" + status + ", role="
+				+ role + "]";
 	}
 
 	public Integer getId() {
@@ -130,16 +137,20 @@ public class User {
 		this.telephone = telephone;
 	}
 
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
 	public String getRole() {
 		return role;
 	}
 
-
 	public void setRole(String role) {
 		this.role = role;
 	}
-	
-	
 	
 }

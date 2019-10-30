@@ -33,6 +33,7 @@ public class UserRepository {
 		user.setZipcode(rs.getString("zipcode"));
 		user.setAddress(rs.getString("address"));
 		user.setTelephone(rs.getString("telephone"));
+		user.setStatus(rs.getInt("status"));
 		return user;
 	};
 	
@@ -45,7 +46,7 @@ public class UserRepository {
 	 * @return　ユーザ情報　メールアドレスが一致しない場合nullを返す
 	 */
 	public User findByEmail(String email) {
-		String sql = "SELECT id, name, email, password, zipcode, address, telephone FROM users WHERE email= :email";
+		String sql = "SELECT id, name, email, password, zipcode, address, telephone, status FROM users WHERE email= :email ";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("email", email);
 		List<User> userList = template.query(sql, param, USER_ROW_MAPPER);
 		if(userList.size() == 0) {
@@ -59,10 +60,11 @@ public class UserRepository {
 	 * @param user ユーザ情報
 	 */
 	public void insert(User user) {
-		String sql = "INSERT INTO users (name, email, password, zipcode, address, telephone) values (:name, :email, :password, :zipcode,:address, :telephone);";
+		String sql = "INSERT INTO users (name, email, password, zipcode, address, telephone, status, role) values (:name, :email, :password, :zipcode,:address, :telephone, 1, :role);";
 		SqlParameterSource param = new BeanPropertySqlParameterSource(user);
 		template.update(sql, param);
 	}
+	
 	/**
 	 * ユーザ情報を変更.
 	 * 
@@ -80,7 +82,7 @@ public class UserRepository {
 	 * @param user　ユーザ情報
 	 */
 	public void delete(int id) {
-		String sql = "DELETE FROM users WHERE id=:id;";
+		String sql = "UPDATE users SET status=0 WHERE id=:id;";
 		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
 		template.update(sql, param);
 	}

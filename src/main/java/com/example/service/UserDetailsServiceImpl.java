@@ -39,6 +39,8 @@ public class UserDetailsServiceImpl implements org.springframework.security.core
 		
 		if(user == null) {
 			throw new UsernameNotFoundException("そのメールアドレスは登録されていません");
+		}else if(user != null && user.getStatus() == 0){
+			throw new UsernameNotFoundException("そのメールアドレスは退会済みです");
 		}
 		//ユーザ権限付与
 		Collection<GrantedAuthority> authorityList = new ArrayList<>();
