@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ja"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>カレー屋のネット注文</title>
+<link rel="stylesheet" href="../../static/css/bootstrap.css"
+	th:href="@{/css/bootstrap.css}">
+<link rel="stylesheet" href="../../static/css/style.css"
+	th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="container">
+				<nav class="navbar navbar-default">
+			<div class="container-fluid">
+				<!-- Brand and toggle get grouped for better mobile display -->
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed"
+						data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+						aria-expanded="false">
+						<span class="sr-only">Toggle navigation</span> <span
+							class="icon-bar"></span> <span class="icon-bar"></span> <span
+							class="icon-bar"></span>
+					</button>
+					<a class="navbar-brand" th:href="@{/top}"
+						href="item_list.html"> <!-- 企業ロゴ --> <img alt="main log"
+						th:src="@{/img_curry/header_logo.png}" height="35">
+					</a>
+				</div>
+
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse"
+					id="bs-example-navbar-collapse-1">
+					<p class="navbar-text navbar-right">
+						<a href="cart_list.html" th:href="@{/cart/showOrder}"
+							class="navbar-link">ショッピングカート</a>&nbsp;&nbsp; <a
+							href="order_history.html" class="navbar-link">注文履歴</a>&nbsp;&nbsp;
+						<span sec:authorize="hasRole('ROLE_ADMIN')"><a
+							href="cart_list.html" class="navbar-link" th:href="@{/admin}">管理者ページ</a></span>&nbsp;&nbsp;
+						<span sec:authorize="!hasRole('ROLE_USER')"><a
+							href="login.html" class="navbar-link" th:href="@{/user/toLogin}">ログイン</a></span>&nbsp;&nbsp;
+						<span sec:authorize="hasRole('ROLE_USER')"><a
+							href="item_list.html" class="navbar-link" th:href="@{/logout}">ログアウト</a></span>
+					</p>
+				</div>
+			</div>
+			<!-- /.container-fluid -->
+		</nav>
+
+	<div style="text-align: center;">
+	<img src="C:/environment/springworkspace/ec-201907/src/main/resources/static/img_curry/curry-cooking.png" th:src="@{/img_curry/curry-cooking.png}" style=" height:300px;">
+	<p>
+	404 Not Found<br>
+	申し訳ございません。お探しのページは見つかりませんでした。<br>
+	
+	</p>
+	<span sec:authorize="!hasRole('ROLE_USER')"><a href="item_list.html" th:href="@{/user/showItemList}" >トップへ戻る</a></span>
+	</div>
+</div>
+<!-- end container -->
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="../../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+</body>
+</html>
