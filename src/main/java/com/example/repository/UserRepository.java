@@ -40,16 +40,6 @@ public class UserRepository {
 	private NamedParameterJdbcTemplate template;
 	
 	/**
-	 * ユーザ情報を挿入.
-	 * @param user ユーザ情報
-	 */
-	public void insert(User user) {
-		String sql = "INSERT INTO users (name, email, password, zipcode, address, telephone) values (:name, :email, :password, :zipcode,:address, :telephone);";
-		SqlParameterSource param = new BeanPropertySqlParameterSource(user);
-		template.update(sql, param);
-	}
-
-	/**
 	 * メールアドレスからユーザ情報を取得.
 	 * @param email メールアドレス
 	 * @return　ユーザ情報　メールアドレスが一致しない場合nullを返す
@@ -62,6 +52,37 @@ public class UserRepository {
 			return null;
 		}
 		return userList.get(0);
+	}
+	
+	/**
+	 * ユーザ情報を挿入.
+	 * @param user ユーザ情報
+	 */
+	public void insert(User user) {
+		String sql = "INSERT INTO users (name, email, password, zipcode, address, telephone) values (:name, :email, :password, :zipcode,:address, :telephone);";
+		SqlParameterSource param = new BeanPropertySqlParameterSource(user);
+		template.update(sql, param);
+	}
+	/**
+	 * ユーザ情報を変更.
+	 * 
+	 * @param user　ユーザ情報
+	 */
+	public void update(User user) {
+		SqlParameterSource param = new BeanPropertySqlParameterSource(user);
+		String sql = "UPDATE users SET name=:name, email=:email, zipcode=:zipcode, address=:address,telephone=:telephone,role=:role WHERE id=:id;";
+		template.update(sql, param);
+	}
+	
+	/**
+	 * ユーザ情報を削除.
+	 * 
+	 * @param user　ユーザ情報
+	 */
+	public void delete(int id) {
+		String sql = "DELETE FROM users WHERE id=:id;";
+		SqlParameterSource param = new MapSqlParameterSource().addValue("id", id);
+		template.update(sql, param);
 	}
 	
 }
