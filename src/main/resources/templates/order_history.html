@@ -70,7 +70,7 @@
 							</th>
 							<th colspan="3" class="order-date">
 								<div class="text-left">
-									<span th:text="${order.calcTotalPrice}">合計金額</span>円
+									<span th:text="${#numbers.formatInteger(order.calcTotalPrice,2,'COMMA')}">合計金額</span>円
 								</div>
 							</th>
 						</tr>
@@ -107,11 +107,11 @@
 								<div class="center">
 									<span class="size"  th:text="'サイズ' + ${orderItem.size}">&nbsp;サイズ</span>
 									<span th:if="${orderItem.size} eq 'M'">
-									<span class="price" th:text="${orderItem.item.priceM} + '円'">&nbsp;</span>&nbsp;&nbsp;
+									<span class="price" th:text="${#numbers.formatInteger(orderItem.item.priceM,2,'COMMA')} + '円'">&nbsp;</span>&nbsp;&nbsp;
 									&nbsp;&nbsp;<span th:text="${orderItem.quantity} + '人前'">数量</span>
 									</span>
 									<span th:if="${orderItem.size} eq 'L'">
-										<span class="price" th:text="${orderItem.item.priceL} + '円'">&nbsp;</span>&nbsp;&nbsp;
+										<span class="price" th:text="${#numbers.formatInteger(orderItem.item.priceL,2,'COMMA')} + '円'">&nbsp;</span>&nbsp;&nbsp;
 										&nbsp;&nbsp;<span th:text="${orderItem.quantity} + '人前'">数量</span>
 									</span>
 								</div>
@@ -122,7 +122,7 @@
 								</ul>
 							</td>
 							<td>
-								<div class="text-center" th:text="${orderItem.subTotal} + '円'">小計</div>
+								<div class="text-center" th:text="${#numbers.formatInteger(orderItem.subTotal,2,'COMMA')} + '円'">小計</div>
 							</td>
 						</tr>
 					</div>

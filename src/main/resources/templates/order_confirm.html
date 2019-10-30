@@ -90,12 +90,12 @@
 								<span class="size"  th:text="'サイズ' + ${orderItem.size}">&nbsp;サイズ</span>
 								
 								<span th:if="${orderItem.size} eq 'M'">
-								<span class="price" th:text="${orderItem.item.priceM} + '円'">&nbsp;</span>&nbsp;&nbsp;
+								<span class="price" th:text="${#numbers.formatInteger(orderItem.item.priceM,2,'COMMA')} + '円'">&nbsp;</span>&nbsp;&nbsp;
 								&nbsp;&nbsp;<span th:text="${orderItem.quantity} + '人前'">数量</span>
 								</span>
 								
 								<span th:if="${orderItem.size} eq 'L'">
-									<span class="price" th:text="${orderItem.item.priceL} + '円'">&nbsp;</span>&nbsp;&nbsp;
+									<span class="price" th:text="${#numbers.formatInteger(orderItem.item.priceL,2,'COMMA')} + '円'">&nbsp;</span>&nbsp;&nbsp;
 									&nbsp;&nbsp;<span th:text="${orderItem.quantity} + '人前'">数量</span>
 								</span>
 							</td>
@@ -106,7 +106,7 @@
 								</ul>
 							</td>
 							<td>
-								<div class="text-center" th:text="${orderItem.subTotal} + '円'">小計</div>
+								<div class="text-center" th:text="${#numbers.formatInteger(orderItem.subTotal,2,'COMMA')} + '円'">小計</div>
 							</td>
 						</tr>
 					</tbody>
@@ -117,8 +117,8 @@
 		<div class="row">
 			<div class="col-xs-offset-2 col-xs-8">
 				<div class="form-group text-center">
-					<span id="total-price" th:text="'消費税：' + ${order.tax} + '円'">消費税</span><br>
-					<span id="total-price" th:text="'ご注文金額合計：' + ${order.calcTotalPrice} + '円'">注文金額合計(税込)</span>
+					<span id="total-price" th:text="'消費税：' + ${#numbers.formatInteger(order.tax,2,'COMMA')} + '円'">消費税</span><br>
+					<span id="total-price" th:text="'ご注文金額合計：' + ${#numbers.formatInteger(order.calcTotalPrice,2,'COMMA')} + '円'">注文金額合計(税込)</span>
 					<input type="hidden" name="amount" th:value="${order.calcTotalPrice}">
 				</div>
 			</div>

@@ -124,8 +124,8 @@
 									<img  th:src="@{'/img_curry/' + ${item.imagePath}}" class="img-responsive img-rounded" width="200" height="600">
 								</a><br>
 								<a th:href="@{'/item/showDetail?id=' + ${item.id}}" th:text="${item.name}">じゃがバターベーコン</a><br>
-								<span class="price" th:text="${item.priceM}">&nbsp;М&nbsp;</span>&nbsp;&nbsp;円 (税抜)<br>
-								<span class="price" th:text="${item.priceL}">&nbsp;Ｌ</span>&nbsp;&nbsp;円 (税抜)<br>
+								<span class="price" th:text="${#numbers.formatInteger(item.priceM,2,'COMMA')}">&nbsp;М&nbsp;</span>&nbsp;&nbsp;円 (税抜)<br>
+								<span class="price" th:text="${#numbers.formatInteger(item.priceL,2,'COMMA')}">&nbsp;Ｌ</span>&nbsp;&nbsp;円 (税抜)<br>
 							</th>
 						</tr>
 					</tbody>
