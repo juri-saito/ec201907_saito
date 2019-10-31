@@ -11,10 +11,13 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+
+import com.example.domain.Order;
 
 /**
  * メール関連機能の業務処理を行うサービス
@@ -22,6 +25,7 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
  *
  */
 @Component
+@Transactional
 public class SendMailService {
 
 	 private static final Logger log = LoggerFactory.getLogger(SendMailService.class);
@@ -36,12 +40,18 @@ public class SendMailService {
 	  /**
 	 * メール送信する
 	 */
-	  public void sendMail(Context context, String email) {
+	  public void sendMail(Order order) {
 			
 		javaMailSender.send(new MimeMessagePreparator() {
 
 	        @Override
 	        public void prepare(MimeMessage mimeMessage) throws Exception {
+	        	Context context = new Context();
+	    		context.setVariable("name", order.getDestinationName());
+	    		context.setVariable("order", order);
+	    		context.setVariable("bootstrap", "../../static/css/bootstrap.css");
+	    		context.setVariable("imgCurry", "/img_curry/");
+	    		String email = order.getDestinationEmail();
 	            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, StandardCharsets.UTF_8.name());
 	            helper.setFrom(System.getenv("GoogleMail"));
 	            helper.setTo(email);
@@ -49,9 +59,8 @@ public class SendMailService {
 	            helper.setText(getMailBody("finished_confirm", context), true);
 	        }
 	    });
-
 	}
-	
+	  
 	/**
 	 * Thymeleafのテンプレートを使用してメールの本文を作成する
 	 * @param templateName

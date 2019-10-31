@@ -61,6 +61,9 @@ public class Order {
 	/** 注文番号冒頭の年月日を表す値 */
 	private String orderDateNum;
 	
+	/** 注文NO */
+	private String order_number;
+	
 	@Override
 	public String toString() {
 		return "Order [id=" + id + ", userId=" + userId + ", status=" + status + ", totalPrice=" + totalPrice
@@ -68,7 +71,7 @@ public class Order {
 				+ destinationEmail + ", destinationZipcode=" + destinationZipcode + ", destinationAddress="
 				+ destinationAddress + ", destinationTel=" + destinationTel + ", deliveryTime=" + deliveryTime
 				+ ", paymentMethod=" + paymentMethod + ", user=" + user + ", orderItemList=" + orderItemList
-				+ ", orderNum=" + orderDateNum + "]";
+				+ ", orderDateNum=" + orderDateNum + ", order_number=" + order_number + "]";
 	}
 
 	public Integer getId() {
@@ -197,6 +200,17 @@ public class Order {
 		this.orderDateNum = orderDateNum;
 	}
 	
+	public String getOrder_number() {
+		return order_number;
+	}
+
+	public void setOrder_number(String order_number) {
+		this.order_number = order_number;
+	}
+
+	public void setOrderDateNum(String orderDateNum) {
+		this.orderDateNum = orderDateNum;
+	}
 
 	/**
 	 * 税額を算出

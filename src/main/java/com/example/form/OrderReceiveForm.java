@@ -68,7 +68,7 @@ public class OrderReceiveForm {
 	}
 	
 	/** 利用者ID */
-	private String user_id;
+//	private String user_id;
 	
 	/** 注文NO */
 	private String order_number;
@@ -172,14 +172,6 @@ public class OrderReceiveForm {
 		this.paymentMethod = paymentMethod;
 	}
 
-	public String getUser_id() {
-		return user_id;
-	}
-
-	public void setUser_id(String user_id) {
-		this.user_id = user_id;
-	}
-
 	public String getOrder_number() {
 		return order_number;
 	}
@@ -241,23 +233,19 @@ public class OrderReceiveForm {
 	}
 
 	public long getlongAmount() {
-		return Integer.parseInt(amount);
-	}
-	
-	public int getIntUser_id() {
-		return Integer.parseInt(user_id);
+		return Long.parseLong(amount);
 	}
 	
 	public long getLongOrder_number() {
-		return Integer.parseInt(order_number);
+		return Long.parseLong(order_number);
 	}
 	
 	public long getLongAmount() {
-		return Integer.parseInt(amount);
+		return Long.parseLong(amount);
 	}
 	
 	public long getLongCard_number() {
-		return Integer.parseInt(card_number);
+		return Long.parseLong(card_number);
 	}
 	
 	public int getIntCard_exp_year() {

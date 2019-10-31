@@ -256,6 +256,18 @@ public class OrderRepository {
 	}
 	
 	/**
+	 * 注文番号を取得する
+	 * @return 注文番号
+	 */
+	public String getOrderNum(Order order) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("select order_num from orders where id = :id");
+		SqlParameterSource param = new BeanPropertySqlParameterSource(order);
+			String orderNum = template.queryForObject(sql.toString(), param, String.class);
+		return orderNum;
+	}
+	
+	/**
 	 * 注文情報の更新をするSQLを作成
 	 * @param order 注文情報
 	 * @return 注文情報の更新をするSQLをあ

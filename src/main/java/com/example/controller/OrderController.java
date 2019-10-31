@@ -7,6 +7,7 @@ import javax.validation.groups.Default;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -64,6 +65,7 @@ public class OrderController {
 		//ログイン中のユーザの未注文の注文情報（ショッピングカート）を表示
 		Order order = shoppingCartService.showLoginUserCart(common.GetUserId());
 		model.addAttribute("order", order);
+		model.addAttribute("userId", common.GetUserId());
 		
 		return "order_confirm";
 	}
@@ -72,9 +74,9 @@ public class OrderController {
 	 * 銀行払いで注文処理を行う
 	 * @return　注文完了画面
 	 */
+	@Transactional
 	@RequestMapping(value = "/finished", params = {"paymentMethod=1"})
 	public String orderAndPayByBank(@Validated({Default.class}) OrderReceiveForm form, BindingResult result, Model model) {
-//	public String order(@Validated OrderReceiveForm form, BindingResult result, Model model) {
 		
 		//支払い方法が選択されていない場合登録画面に戻る
   		if(form.getPaymentMethod() == null) {
@@ -87,15 +89,25 @@ public class OrderController {
   			return confirmOrder(model);
   		}
 
-  		//注文を情報を更新してメールを送る
-		this.order(form, model);
+  		//注文情報を更新して、注文番号が付与された注文情報を取得する
+  		Order order = orderService.order(form);
+  		
+  		//注文完了メールを送る
+		try {
+			sendMailService.sendMail(order);
+		} catch (Exception e) {
+			result.rejectValue("destinationEmail", "", "ご注文確認メールが送信できませんでした");
+			throw e;
+		}
 		
 		return "order_finished";
 	}
+	
 	/**
 	 *  クレジットカード払いで注文処理を行う
 	 * @return　注文完了画面
 	 */
+	@Transactional
 	@RequestMapping(value = "/finished", params = {"paymentMethod=2"})
 	public String orderAndPayByCredit(@Validated({PayByCreditCard.class, Default.class}) OrderReceiveForm form, BindingResult result, Model model) {
 		
@@ -110,50 +122,30 @@ public class OrderController {
 			return confirmOrder(model);
 		}
 		
-		//クレジットカード払いのとき
-		Integer paymantMethod = Integer.parseInt(form.getPaymentMethod());
-		if (paymantMethod == 2) {
-			//決済処理
-			SettlementResult response = orderService.Settlement(form);
-			//決済結果を確認
-			if(response.getError_code().equals("E-01")) {
-				result.rejectValue("card_exp_year", "", "カードの有効期限が切れています");
-				result.rejectValue("card_exp_month", "", "カードの有効期限が切れています");
-			}else if(response.getError_code().equals("E-02")) {
-				result.rejectValue("card_cvv", "", "セキュリティコードが誤っています");
-			}else if(response.getError_code().equals("E-03")) {
-				result.rejectValue("card_exp_year", "", "カードの有効期限は半角数字でご入力ください");
-				result.rejectValue("card_exp_month", "", "カードの有効期限は半角数字でご入力ください");
-			}
-		}	
+		//注文情報を更新して、注文番号が付与された注文情報を取得する
+		Order order = orderService.order(form);
 		
-		//注文を情報を更新してメールを送る
-		this.order(form, model);
+		//クレジットカード決済処理
+		form.setOrder_number(order.getOrder_number());
+		orderService.settlement(form, result);
+		
+		//エラーが一つでもあれば登録画面に戻る
+		if(result.hasErrors()) {
+			return confirmOrder(model);
+		}
+		
+		//注文完了メールを送る
+		try {
+			sendMailService.sendMail(order);
+		} catch (Exception e) {
+			result.rejectValue("destinationEmail", "", "ご注文確認メールが送信できませんでした");
+			//決済処理のキャンセル
+			orderService.cancel(order.getOrder_number());
+			throw e;
+		}
 		
 		return "order_finished";
 	}
-	
-	/**
-	 * 注文を情報を更新してメールを送る
-	 * @param form　注文フォーム
-	 * @param model リクエストスコープ
-	 * @return　注文完了ページ
-	 */
-	public void order(OrderReceiveForm form, Model model ) {
-		//ユーザIDをフォームにセットし、注文情報を更新する
-		form.setUserId(common.GetUserId());
-		Order order = orderService.order(form);
-		
-		//注文完了メール送信
-		Context context = new Context();
-		context.setVariable("name", order.getDestinationName());
-		context.setVariable("order", order);
-		context.setVariable("bootstrap", "../../static/css/bootstrap.css");
-		context.setVariable("imgCurry", "/img_curry/");
-		String email = order.getDestinationEmail();
-		sendMailService.sendMail(context, email);
-	}
-	
 	
 	/**
 	 * 注文履歴ページを表示する
@@ -167,4 +159,5 @@ public class OrderController {
 		
 		return "order_history";
 	}
+	
 }

@@ -18,6 +18,7 @@
 <body>
 	<div class="container">
 	<form th:action="@{/order/finished}" th:object="${orderReceiveForm}" method="post">
+	<input type="hidden" name="userId" th:value="${userId}">
 		<nav class="navbar navbar-default">
 			<div class="container-fluid">
 				<!-- Brand and toggle get grouped for better mobile display -->
