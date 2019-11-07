@@ -8,10 +8,10 @@ spring:
 
   mail:
     default-encoding: UTF-8
-    host: smtp.gmail.com
-    port: 587
-    username: ${GoogleMail:bar} #環境変数のメールアドレスを取得
-    password: ${GooglePass:bar} #環境変数のメールパスワードを取得
+    host: localhost #ローカルホストのSMTP4DEVに変更
+    port: 25 #SMTP4DEVの初期値番号25に変更
+    password: abc #環境変数のメールパスワードを取得
+    username: test@test.co.jp
     properties:
       mail:
         smtp:
@@ -27,3 +27,9 @@ server:
  servlet:
   context-path: /ec-201907b-saito
   
+  
+
+    #host: smtp.gmail.com
+    #port: 587
+    #username: ${GoogleMail:bar} #環境変数のメールアドレスを取得
+    #password: ${GooglePass:bar} #環境変数のメールパスワードを取得
